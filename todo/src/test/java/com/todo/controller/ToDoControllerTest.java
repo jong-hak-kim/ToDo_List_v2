@@ -49,7 +49,7 @@ class ToDoControllerTest {
         //expected
         mockMvc.perform(post("/todos")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\": \"제목입니다.\", \"content\": \"내용입니다.\"}")
+                        .content("{\"title\": \"제목입니다\", \"content\": \"내용입니다.\"}")
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().string("Hello World"))
