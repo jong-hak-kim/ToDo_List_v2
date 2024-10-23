@@ -14,6 +14,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest
 class ToDoControllerTest {
 
+    //Mock 테스트
+    //웹 애플리케이션 API를 테스트할 때 사용
+
     @Autowired
     private MockMvc mockMvc;
 
