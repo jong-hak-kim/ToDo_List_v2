@@ -1,7 +1,10 @@
 package com.todo.controller;
 
 import com.todo.request.ToDoCreate;
+import com.todo.service.ToDoService;
 import jakarta.validation.Valid;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,12 +26,13 @@ import java.util.Map;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 public class ToDoController {
 
-
+    private final ToDoService toDoService;
 
     @PostMapping("/todos")
-    public Map<String, String> todos(@RequestBody @Valid ToDoCreate params) {
+    public Map<String, String> todos(@RequestBody @Valid ToDoCreate request) {
         //* 아래의 검증 코드 단점
         //1. 매번 메서드마다 값을 검증해야한다.
         //  > 개발자가 까먹을 수 있다.
@@ -37,8 +41,8 @@ public class ToDoController {
         // 2. 응답값에 HashMap -> 응답 클래스를 만들어주는게 좋다
         // 3. 여러 개의 에러 처리 힘듦
         // 4. 세 번 이상의 반복적인 작업은 피해야 한다.
-            // - 코드 && 개발에 관한 모든 것
-                // - 자동화 고려
+        // - 코드 && 개발에 관한 모든 것
+        // - 자동화 고려
 //
 //        if (result.hasErrors()) {
 //            List<FieldError> fieldErrors = result.getFieldErrors();
@@ -50,6 +54,10 @@ public class ToDoController {
 //            error.put(fieldName, errorMessage);
 //            return error;
 //        }
+
+        //db 저장
+        // db.save(params)
+        toDoService.write(request);
 
         return Map.of();
     }
