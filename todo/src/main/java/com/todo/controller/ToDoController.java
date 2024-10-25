@@ -1,9 +1,9 @@
 package com.todo.controller;
 
+import com.todo.domain.ToDo;
 import com.todo.request.ToDoCreate;
 import com.todo.service.ToDoService;
 import jakarta.validation.Valid;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -24,25 +24,16 @@ import java.util.Map;
 // 4. DB에 값을 저장할 때 의도치 않은 오류가 발생할 수 있다.
 // 5. 서버 개발자의 편안함을 위해서
 
-@Slf4j
-@RestController
-@RequiredArgsConstructor
-public class ToDoController {
-
-    private final ToDoService toDoService;
-
-    @PostMapping("/todos")
-    public Map<String, String> todos(@RequestBody @Valid ToDoCreate request) {
-        //* 아래의 검증 코드 단점
-        //1. 매번 메서드마다 값을 검증해야한다.
-        //  > 개발자가 까먹을 수 있다.
-        //  > 검증 부분에서 버그가 발생할 여지가 높다
-        //  > 지겹다
-        // 2. 응답값에 HashMap -> 응답 클래스를 만들어주는게 좋다
-        // 3. 여러 개의 에러 처리 힘듦
-        // 4. 세 번 이상의 반복적인 작업은 피해야 한다.
-        // - 코드 && 개발에 관한 모든 것
-        // - 자동화 고려
+//* 아래의 검증 코드 단점
+//1. 매번 메서드마다 값을 검증해야한다.
+//  > 개발자가 까먹을 수 있다.
+//  > 검증 부분에서 버그가 발생할 여지가 높다
+//  > 지겹다
+// 2. 응답값에 HashMap -> 응답 클래스를 만들어주는게 좋다
+// 3. 여러 개의 에러 처리 힘듦
+// 4. 세 번 이상의 반복적인 작업은 피해야 한다.
+// - 코드 && 개발에 관한 모든 것
+// - 자동화 고려
 //
 //        if (result.hasErrors()) {
 //            List<FieldError> fieldErrors = result.getFieldErrors();
@@ -55,11 +46,26 @@ public class ToDoController {
 //            return error;
 //        }
 
-        //db 저장
-        // db.save(params)
-        toDoService.write(request);
+// POST 요청은 대부분 200, 201 응답코드 사용
+// 응답 케이스 예시
+// Case1. 저장한 데이터 Entity를 Response로 응답
+// Case2. 저장한 데이터의 primary_id -> Response로 응답
+//   - Client에서는 수신한 id를 글 조회 API를 통해서 글 데이터를 수신받는다
+// Case3. 응답 필요 없음 -> 클라이언트에서 모든 TODO(할 일) 데이터 context를 잘 관리함
+// Bad Case: 서버에서 -> 반드시 이렇게 할 겁니다
+//  -> 서버에서 차라리 유용하게 대응하는 것이 좋다(대신 코드 잘 짜야 함)
+//  -> 한 번에 일괄적으로 잘 처리되는 케이스가 없기 때문에 잘 관리하는 형태가 중요
 
-        return Map.of();
+@Slf4j
+@RestController
+@RequiredArgsConstructor
+public class ToDoController {
+
+    private final ToDoService toDoService;
+
+    @PostMapping("/todos")
+    public void todos(@RequestBody @Valid ToDoCreate request) {
+        toDoService.write(request);
     }
 
 }

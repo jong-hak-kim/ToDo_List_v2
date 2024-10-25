@@ -17,7 +17,10 @@ public class ToDoService {
     public void write(ToDoCreate toDoCreate) {
         // toDocreate -> Entity로 변환시켜줘야 한다.
 
-        ToDo toDo = new ToDo(toDoCreate.getTitle(), toDoCreate.getContent());
+        ToDo toDo = ToDo.builder()
+                .title(toDoCreate.getTitle())
+                .content(toDoCreate.getContent()).build();
+
         toDoRepository.save(toDo);
     }
 }
