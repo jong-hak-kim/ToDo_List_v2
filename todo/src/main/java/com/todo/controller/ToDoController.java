@@ -68,4 +68,15 @@ public class ToDoController {
         toDoService.write(request);
     }
 
+    /**
+     * /todos -> 글 전체 조회(검색 + 페이징)
+     * /todos/{toDoId} -> 글 한 개 조회
+     */
+
+    @GetMapping("/todos/{toDoId}")
+    public ToDo get(@PathVariable(name = "toDoId") Long id) {
+        ToDo toDo = toDoService.get(id);
+        return toDo;
+    }
+
 }

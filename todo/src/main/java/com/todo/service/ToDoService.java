@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -19,8 +21,16 @@ public class ToDoService {
 
         ToDo toDo = ToDo.builder()
                 .title(toDoCreate.getTitle())
-                .content(toDoCreate.getContent()).build();
+                .content(toDoCreate.getContent())
+                .build();
 
         toDoRepository.save(toDo);
+    }
+
+    public ToDo get(Long id) {
+        ToDo toDo = toDoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 ID입니다."));
+
+        return toDo;
     }
 }
