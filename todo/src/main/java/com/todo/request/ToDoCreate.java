@@ -23,8 +23,4 @@ public class ToDoCreate {
         this.content = content;
     }
 
-    // 빌더의 장점
-    // - 가독성에 좋다 (값 생성에 대한 유연함)
-    // - 필요한 값만 받을 수 있다.
-    // - 객체의 불변성
 }

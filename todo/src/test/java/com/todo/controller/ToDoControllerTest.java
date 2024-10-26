@@ -72,9 +72,6 @@ class ToDoControllerTest {
     @DisplayName("/todos 요청 시 Hello World를 출력한다.")
     void test() throws Exception {
 
-        //given
-        //빌더 패턴
-        //순서 혼동이 오지 않는다.
         ToDoCreate request = ToDoCreate.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
