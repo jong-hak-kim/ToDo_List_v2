@@ -82,6 +82,7 @@ public class ToDoController {
     @GetMapping("/todos/{toDoId}")
     public ToDo get(@PathVariable(name = "toDoId") Long id) {
         ToDo toDo = toDoService.get(id);
+        //응답 클래스 분리(서비스 정책에 맞는)
         return toDo;
     }
 

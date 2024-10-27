@@ -172,18 +172,22 @@ class ToDoControllerTest {
     void test5() throws Exception {
         //given
         ToDo toDo = ToDo.builder()
-                .title("foo")
+                .title("123456789012345")
                 .content("bar")
                 .build();
 
         toDoRepository.save(toDo);
+
+
+        //클라이언트 요구사항
+        // json 응답에서 title 값 길이를 최대 10글자로 해주세요.
 
         //expected
         mockMvc.perform(get("/todos/{toDoId}", toDo.getId())
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(toDo.getId()))
-                .andExpect(jsonPath("$.title").value("foo"))
+                .andExpect(jsonPath("$.title").value("123456789012345"))
                 .andExpect(jsonPath("$.content").value("bar"))
                 .andDo(print());
 

@@ -31,4 +31,11 @@ public class ToDoService {
 
         return toDo;
     }
+
+    public ToDo getRss(Long id) {
+        ToDo toDo = toDoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 ID입니다."));
+
+        return toDo;
+    }
 }

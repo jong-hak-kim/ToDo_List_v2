@@ -25,4 +25,9 @@ public class ToDo {
         this.title = title;
         this.content = content;
     }
+
+    public String getTitle() {
+        //Entity에서 getter를 만들때는 서비스의 정책을 넣으면 안된다! 절대!
+        return title;
+    }
 }
