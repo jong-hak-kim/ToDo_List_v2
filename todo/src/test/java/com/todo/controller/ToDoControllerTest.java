@@ -187,7 +187,7 @@ class ToDoControllerTest {
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(toDo.getId()))
-                .andExpect(jsonPath("$.title").value("123456789012345"))
+                .andExpect(jsonPath("$.title").value("1234567890"))
                 .andExpect(jsonPath("$.content").value("bar"))
                 .andDo(print());
 

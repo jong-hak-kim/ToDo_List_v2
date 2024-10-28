@@ -2,6 +2,7 @@ package com.todo.controller;
 
 import com.todo.domain.ToDo;
 import com.todo.request.ToDoCreate;
+import com.todo.response.ToDoResponse;
 import com.todo.service.ToDoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -80,10 +81,12 @@ public class ToDoController {
      */
 
     @GetMapping("/todos/{toDoId}")
-    public ToDo get(@PathVariable(name = "toDoId") Long id) {
-        ToDo toDo = toDoService.get(id);
+    public ToDoResponse get(@PathVariable(name = "toDoId") Long id) {
         //응답 클래스 분리(서비스 정책에 맞는)
-        return toDo;
+        //Request 클래스
+        //Response 클래스 명확하게 분리
+        ToDoResponse response = toDoService.get(id);
+        return response;
     }
 
 }

@@ -3,6 +3,7 @@ package com.todo.service;
 import com.todo.domain.ToDo;
 import com.todo.repository.ToDoRepository;
 import com.todo.request.ToDoCreate;
+import com.todo.response.ToDoResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,13 +56,13 @@ class ToDoServiceTest {
         toDoRepository.save(requestToDo);
 
         //when
-        ToDo toDo = toDoService.get(requestToDo.getId());
+        ToDoResponse response = toDoService.get(requestToDo.getId());
 
         //then
-        assertNotNull(toDo);
+        assertNotNull(response);
         assertEquals(1L, toDoRepository.count());
-        assertEquals("foo", toDo.getTitle());
-        assertEquals("bar", toDo.getContent());
+        assertEquals("foo", response.getTitle());
+        assertEquals("bar", response.getContent());
     }
 
 }
