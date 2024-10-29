@@ -1,5 +1,6 @@
 package com.todo.response;
 
+import com.todo.domain.ToDo;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,6 +11,13 @@ public class ToDoResponse {
     private final Long id;
     private final String title;
     private final String content;
+
+    // 생성자 오버로딩
+    public ToDoResponse(ToDo toDo) {
+        this.id = toDo.getId();
+        this.title = toDo.getTitle();
+        this.content = toDo.getContent();
+    }
 
     @Builder
     public ToDoResponse(Long id, String title, String content) {

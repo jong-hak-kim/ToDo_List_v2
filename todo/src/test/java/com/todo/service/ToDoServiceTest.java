@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -63,6 +65,29 @@ class ToDoServiceTest {
         assertEquals(1L, toDoRepository.count());
         assertEquals("foo", response.getTitle());
         assertEquals("bar", response.getContent());
+    }
+
+    @Test
+    @DisplayName("글 여러 개 조회")
+    void test3() throws Exception {
+        //given
+        toDoRepository.saveAll(List.of(
+                ToDo.builder()
+                        .title("foo1")
+                        .content("bar1")
+                        .build(),
+                ToDo.builder()
+                        .title("foo2")
+                        .content("bar2")
+                        .build()));
+
+
+        //when
+        List<ToDoResponse> toDos = toDoService.getList();
+
+
+        //then
+        assertEquals(2L, toDos.size());
     }
 
 }

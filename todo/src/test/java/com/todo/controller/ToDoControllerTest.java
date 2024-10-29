@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.todo.domain.ToDo;
 import com.todo.repository.ToDoRepository;
 import com.todo.request.ToDoCreate;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -189,6 +191,43 @@ class ToDoControllerTest {
                 .andExpect(jsonPath("$.id").value(toDo.getId()))
                 .andExpect(jsonPath("$.title").value("1234567890"))
                 .andExpect(jsonPath("$.content").value("bar"))
+                .andDo(print());
+
+    }
+
+    @Test
+    @DisplayName("글 여러 개 조회")
+    void test6() throws Exception {
+        //given
+        ToDo toDo1 = toDoRepository.save(ToDo.builder()
+                .title("title_1")
+                .content("content_1")
+                .build());
+
+        ToDo toDo2 = toDoRepository.save(ToDo.builder()
+                .title("title_2")
+                .content("content_2")
+                .build());
+
+
+        //클라이언트 요구사항
+        // json 응답에서 title 값 길이를 최대 10글자로 해주세요.
+
+        //expected
+        /**
+         * List로 표현됨
+         * [{id:..., title:...}, {id:..., title:...}]
+         */
+        mockMvc.perform(get("/todos")
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()", is(2)))
+                .andExpect(jsonPath("$[0].id").value(toDo1.getId()))
+                .andExpect(jsonPath("$[0].title").value("title_1"))
+                .andExpect(jsonPath("$[0].content").value("content_1"))
+                .andExpect(jsonPath("$[1].id").value(toDo2.getId()))
+                .andExpect(jsonPath("$[1].title").value("title_2"))
+                .andExpect(jsonPath("$[1].content").value("content_2"))
                 .andDo(print());
 
     }

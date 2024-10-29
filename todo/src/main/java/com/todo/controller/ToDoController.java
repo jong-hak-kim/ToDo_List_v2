@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.List;
 
 // Http Method
 // 각 기능 알기
@@ -76,17 +76,22 @@ public class ToDoController {
     }
 
     /**
+     * 조회 API
      * /todos -> 글 전체 조회(검색 + 페이징)
      * /todos/{toDoId} -> 글 한 개 조회
      */
 
     @GetMapping("/todos/{toDoId}")
-    public ToDoResponse get(@PathVariable(name = "toDoId") Long id) {
+    public ToDoResponse get(@PathVariable Long toDoId) {
         //응답 클래스 분리(서비스 정책에 맞는)
         //Request 클래스
         //Response 클래스 명확하게 분리
-        ToDoResponse response = toDoService.get(id);
-        return response;
+        return toDoService.get(toDoId);
+    }
+
+    @GetMapping("/todos")
+    public List<ToDoResponse> getList() {
+        return toDoService.getList();
     }
 
 }
