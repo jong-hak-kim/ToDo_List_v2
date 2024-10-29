@@ -14,6 +14,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -199,16 +203,13 @@ class ToDoControllerTest {
     @DisplayName("글 여러 개 조회")
     void test6() throws Exception {
         //given
-        ToDo toDo1 = toDoRepository.save(ToDo.builder()
-                .title("title_1")
-                .content("content_1")
-                .build());
-
-        ToDo toDo2 = toDoRepository.save(ToDo.builder()
-                .title("title_2")
-                .content("content_2")
-                .build());
-
+        List<ToDo> requestToDos = IntStream.range(1, 31)
+                .mapToObj(i -> ToDo.builder()
+                        .title("제목 " + i)
+                        .content("반포자이 " + i)
+                        .build())
+                .collect(Collectors.toList());
+        toDoRepository.saveAll(requestToDos);
 
         //클라이언트 요구사항
         // json 응답에서 title 값 길이를 최대 10글자로 해주세요.
@@ -218,16 +219,13 @@ class ToDoControllerTest {
          * List로 표현됨
          * [{id:..., title:...}, {id:..., title:...}]
          */
-        mockMvc.perform(get("/todos")
+        mockMvc.perform(get("/todos?page=1&sort=id,desc")
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()", is(2)))
-                .andExpect(jsonPath("$[0].id").value(toDo1.getId()))
-                .andExpect(jsonPath("$[0].title").value("title_1"))
-                .andExpect(jsonPath("$[0].content").value("content_1"))
-                .andExpect(jsonPath("$[1].id").value(toDo2.getId()))
-                .andExpect(jsonPath("$[1].title").value("title_2"))
-                .andExpect(jsonPath("$[1].content").value("content_2"))
+                .andExpect(jsonPath("$.length()",is(5)))
+                .andExpect(jsonPath("$[0].id").value(30))
+                .andExpect(jsonPath("$[0].title").value("제목 30"))
+                .andExpect(jsonPath("$[0].content").value("반포자이 30"))
                 .andDo(print());
 
     }

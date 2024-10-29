@@ -12,6 +12,12 @@ spring:
   application:
     name=todo
 
+  data:
+    web:
+      pageable:
+        one-indexed-parameters: true
+        default-page-size: 5
+
 
 server:
   servlet:

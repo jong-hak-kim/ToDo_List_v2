@@ -9,10 +9,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.data.domain.Sort.Direction.*;
 
 @SpringBootTest
 class ToDoServiceTest {
@@ -68,26 +74,26 @@ class ToDoServiceTest {
     }
 
     @Test
-    @DisplayName("글 여러 개 조회")
+    @DisplayName("글 1페이지 조회")
     void test3() throws Exception {
         //given
-        toDoRepository.saveAll(List.of(
-                ToDo.builder()
-                        .title("foo1")
-                        .content("bar1")
-                        .build(),
-                ToDo.builder()
-                        .title("foo2")
-                        .content("bar2")
-                        .build()));
+        List<ToDo> requestToDos = IntStream.range(1, 31)
+                .mapToObj(i -> ToDo.builder()
+                        .title("제목 " + i)
+                        .content("반포자이 " + i)
+                        .build())
+                .collect(Collectors.toList());
+        toDoRepository.saveAll(requestToDos);
 
+        Pageable pageable = PageRequest.of(0, 5, DESC, "id");
 
         //when
-        List<ToDoResponse> toDos = toDoService.getList();
-
+        List<ToDoResponse> toDos = toDoService.getList(pageable);
 
         //then
-        assertEquals(2L, toDos.size());
+        assertEquals(5L, toDos.size());
+        assertEquals("제목 30", toDos.get(0).getTitle());
+        assertEquals("제목 26", toDos.get(4).getTitle());
     }
 
 }

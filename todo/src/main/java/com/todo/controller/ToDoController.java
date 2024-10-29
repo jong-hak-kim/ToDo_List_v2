@@ -7,6 +7,8 @@ import com.todo.service.ToDoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -90,8 +92,8 @@ public class ToDoController {
     }
 
     @GetMapping("/todos")
-    public List<ToDoResponse> getList() {
-        return toDoService.getList();
+    public List<ToDoResponse> getList(Pageable pageable) {
+        return toDoService.getList(pageable);
     }
 
 }
