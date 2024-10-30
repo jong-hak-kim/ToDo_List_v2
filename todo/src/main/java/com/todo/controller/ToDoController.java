@@ -2,6 +2,7 @@ package com.todo.controller;
 
 import com.todo.domain.ToDo;
 import com.todo.request.ToDoCreate;
+import com.todo.request.ToDoSearch;
 import com.todo.response.ToDoResponse;
 import com.todo.service.ToDoService;
 import jakarta.validation.Valid;
@@ -92,8 +93,8 @@ public class ToDoController {
     }
 
     @GetMapping("/todos")
-    public List<ToDoResponse> getList(Pageable pageable) {
-        return toDoService.getList(pageable);
+    public List<ToDoResponse> getList(@ModelAttribute ToDoSearch toDoSearch) {
+        return toDoService.getList(toDoSearch);
     }
 
 }

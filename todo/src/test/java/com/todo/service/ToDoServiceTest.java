@@ -3,6 +3,7 @@ package com.todo.service;
 import com.todo.domain.ToDo;
 import com.todo.repository.ToDoRepository;
 import com.todo.request.ToDoCreate;
+import com.todo.request.ToDoSearch;
 import com.todo.response.ToDoResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -77,7 +78,7 @@ class ToDoServiceTest {
     @DisplayName("글 1페이지 조회")
     void test3() throws Exception {
         //given
-        List<ToDo> requestToDos = IntStream.range(1, 31)
+        List<ToDo> requestToDos = IntStream.range(0, 20)
                 .mapToObj(i -> ToDo.builder()
                         .title("제목 " + i)
                         .content("반포자이 " + i)
@@ -85,15 +86,16 @@ class ToDoServiceTest {
                 .collect(Collectors.toList());
         toDoRepository.saveAll(requestToDos);
 
-        Pageable pageable = PageRequest.of(0, 5, DESC, "id");
+        ToDoSearch toDoSearch = ToDoSearch.builder()
+                .page(1)
+                .build();
 
         //when
-        List<ToDoResponse> toDos = toDoService.getList(pageable);
+        List<ToDoResponse> toDos = toDoService.getList(toDoSearch);
 
         //then
-        assertEquals(5L, toDos.size());
-        assertEquals("제목 30", toDos.get(0).getTitle());
-        assertEquals("제목 26", toDos.get(4).getTitle());
+        assertEquals(10L, toDos.size());
+        assertEquals("제목 19", toDos.get(0).getTitle());
     }
 
 }

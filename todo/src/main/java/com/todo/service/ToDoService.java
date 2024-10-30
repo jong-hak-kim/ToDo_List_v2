@@ -3,6 +3,7 @@ package com.todo.service;
 import com.todo.domain.ToDo;
 import com.todo.repository.ToDoRepository;
 import com.todo.request.ToDoCreate;
+import com.todo.request.ToDoSearch;
 import com.todo.response.ToDoResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,8 +48,8 @@ public class ToDoService {
     // 글이 100,000,000인 경우 DB를 모두 조회하게 되면 DB가 뻗을 수 있다.
     // DB -> 애플리케이션 서버로 전달하는 시간, 트래픽 비용 등이 발생할 수 있다.
 
-    public List<ToDoResponse> getList(Pageable pageable) {
-        return toDoRepository.findAll(pageable).stream()
+    public List<ToDoResponse> getList(ToDoSearch toDoSearch) {
+        return toDoRepository.getList(toDoSearch).stream()
                 .map(ToDoResponse::new)
                 .collect(Collectors.toList());
     }
