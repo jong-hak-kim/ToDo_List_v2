@@ -3,6 +3,7 @@ package com.todo.service;
 import com.todo.domain.ToDo;
 import com.todo.repository.ToDoRepository;
 import com.todo.request.ToDoCreate;
+import com.todo.request.ToDoEdit;
 import com.todo.request.ToDoSearch;
 import com.todo.response.ToDoResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -97,5 +98,56 @@ class ToDoServiceTest {
         assertEquals(10L, toDos.size());
         assertEquals("제목 19", toDos.get(0).getTitle());
     }
+
+    @Test
+    @DisplayName("글 제목 수정")
+    void test4() throws Exception {
+        //given
+        ToDo toDo = ToDo.builder()
+                .title("제목입니다.")
+                .content("내용입니다.")
+                .build();
+        toDoRepository.save(toDo);
+
+        ToDoEdit toDoEdit = ToDoEdit.builder()
+                .title("제목")
+                .content("내용입니다.")
+                .build();
+
+        //when
+        toDoService.edit(toDo.getId(), toDoEdit);
+
+        //then
+        ToDo changeToDo = toDoRepository.findById(toDo.getId())
+                .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id = " + toDo.getId()));
+
+        assertEquals("제목", changeToDo.getTitle());
+    }
+
+    @Test
+    @DisplayName("글 내용 수정")
+    void test5() throws Exception {
+        //given
+        ToDo toDo = ToDo.builder()
+                .title("제목입니다.")
+                .content("내용입니다.")
+                .build();
+        toDoRepository.save(toDo);
+
+        ToDoEdit toDoEdit = ToDoEdit.builder()
+                .title("제목입니다.")
+                .content("내용")
+                .build();
+
+        //when
+        toDoService.edit(toDo.getId(), toDoEdit);
+
+        //then
+        ToDo changeToDo = toDoRepository.findById(toDo.getId())
+                .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id = " + toDo.getId()));
+
+        assertEquals("내용", changeToDo.getContent());
+    }
+
 
 }

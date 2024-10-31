@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.todo.domain.ToDo;
 import com.todo.repository.ToDoRepository;
 import com.todo.request.ToDoCreate;
+import com.todo.request.ToDoEdit;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,8 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -247,6 +247,29 @@ class ToDoControllerTest {
                 .andExpect(jsonPath("$.length()",is(10)))
                 .andExpect(jsonPath("$[0].title").value("제목 19"))
                 .andExpect(jsonPath("$[0].content").value("반포자이 19"))
+                .andDo(print());
+
+    }
+
+    @Test
+    @DisplayName("글 제목 수정")
+    void test8() throws Exception {
+        //given
+        ToDo toDo = ToDo.builder()
+                .title("제목입니다.")
+                .content("내용입니다.")
+                .build();
+        toDoRepository.save(toDo);
+
+        ToDoEdit toDoEdit = ToDoEdit.builder()
+                .title("제목")
+                .content("내용입니다.")
+                .build();
+
+        mockMvc.perform(patch("/todos/{toDoId}", toDo.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(toDoEdit)))
+                .andExpect(status().isOk())
                 .andDo(print());
 
     }

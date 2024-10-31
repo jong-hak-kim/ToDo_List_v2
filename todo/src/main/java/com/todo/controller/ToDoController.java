@@ -2,6 +2,7 @@ package com.todo.controller;
 
 import com.todo.domain.ToDo;
 import com.todo.request.ToDoCreate;
+import com.todo.request.ToDoEdit;
 import com.todo.request.ToDoSearch;
 import com.todo.response.ToDoResponse;
 import com.todo.service.ToDoService;
@@ -96,5 +97,11 @@ public class ToDoController {
     public List<ToDoResponse> getList(@ModelAttribute ToDoSearch toDoSearch) {
         return toDoService.getList(toDoSearch);
     }
+
+    @PatchMapping("/todos/{toDoId}")
+    public void edit(@PathVariable Long toDoId, @RequestBody @Valid ToDoEdit request) {
+        toDoService.edit(toDoId, request);
+    }
+
 
 }

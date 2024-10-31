@@ -1,10 +1,7 @@
 package com.todo.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,8 +23,14 @@ public class ToDo {
         this.content = content;
     }
 
-    public String getTitle() {
-        //Entity에서 getter를 만들때는 서비스의 정책을 넣으면 안된다! 절대!
-        return title;
+    public ToDoEditor.ToDoEditorBuilder toEditor() {
+        return ToDoEditor.builder()
+                .title(title)
+                .content(content);
+    }
+
+    public void edit(ToDoEditor toDoEditor) {
+        title = toDoEditor.getTitle();
+        content = toDoEditor.getContent();
     }
 }

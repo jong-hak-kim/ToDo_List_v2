@@ -13,7 +13,6 @@ import static java.lang.Math.min;
 public class ToDoSearch {
 
     private static final int MAX_SIZE = 2000;
-    ;
 
     @Builder.Default
     private Integer page = 1;

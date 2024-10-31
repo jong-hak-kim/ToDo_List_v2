@@ -1,8 +1,10 @@
 package com.todo.service;
 
 import com.todo.domain.ToDo;
+import com.todo.domain.ToDoEditor;
 import com.todo.repository.ToDoRepository;
 import com.todo.request.ToDoCreate;
+import com.todo.request.ToDoEdit;
 import com.todo.request.ToDoSearch;
 import com.todo.response.ToDoResponse;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,5 +55,20 @@ public class ToDoService {
         return toDoRepository.getList(toDoSearch).stream()
                 .map(ToDoResponse::new)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void edit(Long id, ToDoEdit toDoEdit) {
+        ToDo toDo = toDoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+
+        ToDoEditor.ToDoEditorBuilder toDoEditorBuilder = toDo.toEditor();
+
+        ToDoEditor toDoEditor = toDoEditorBuilder.title(toDoEdit.getTitle())
+                .content(toDoEdit.getContent())
+                .build();
+
+        toDo.edit(toDoEditor);
+
     }
 }
