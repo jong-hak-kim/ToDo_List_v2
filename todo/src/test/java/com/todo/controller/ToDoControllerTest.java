@@ -222,7 +222,7 @@ class ToDoControllerTest {
         mockMvc.perform(get("/todos?page=1&size=10")
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()",is(10)))
+                .andExpect(jsonPath("$.length()", is(10)))
                 .andExpect(jsonPath("$[0].title").value("제목 19"))
                 .andExpect(jsonPath("$[0].content").value("반포자이 19"))
                 .andDo(print());
@@ -244,7 +244,7 @@ class ToDoControllerTest {
         mockMvc.perform(get("/todos?page=0&size=10")
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()",is(10)))
+                .andExpect(jsonPath("$.length()", is(10)))
                 .andExpect(jsonPath("$[0].title").value("제목 19"))
                 .andExpect(jsonPath("$[0].content").value("반포자이 19"))
                 .andDo(print());
@@ -272,6 +272,23 @@ class ToDoControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
 
+    }
+
+    @Test
+    @DisplayName("게시글 삭제")
+    void test9() throws Exception {
+        //given
+        ToDo toDo = ToDo.builder()
+                .title("제목입니다.")
+                .content("내용입니다.")
+                .build();
+        toDoRepository.save(toDo);
+
+        // expected
+        mockMvc.perform(delete("/todos/{toDoId}", toDo.getId())
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 
 }

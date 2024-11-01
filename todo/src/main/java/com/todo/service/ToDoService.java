@@ -71,4 +71,11 @@ public class ToDoService {
         toDo.edit(toDoEditor);
 
     }
+
+    public void delete(Long id) {
+        ToDo toDo = toDoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+
+        toDoRepository.delete(toDo);
+    }
 }

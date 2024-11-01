@@ -103,5 +103,10 @@ public class ToDoController {
         toDoService.edit(toDoId, request);
     }
 
+    @DeleteMapping("/todos/{toDoId}")
+    public void delete(@PathVariable Long toDoId) {
+        toDoService.delete(toDoId);
+    }
+
 
 }

@@ -175,5 +175,23 @@ class ToDoServiceTest {
         assertEquals("내용", changeToDo.getContent());
     }
 
+    @Test
+    @DisplayName("게시글 삭제")
+    void test7() throws Exception {
+
+        //given
+        ToDo toDo = ToDo.builder()
+                .title("제목입니다.")
+                .content("내용입니다.")
+                .build();
+        toDoRepository.save(toDo);
+
+        //when
+        toDoService.delete(toDo.getId());
+
+        //then
+        assertEquals(0, toDoRepository.count());
+    }
+
 
 }
