@@ -135,7 +135,7 @@ class ToDoServiceTest {
         toDoRepository.save(toDo);
 
         ToDoEdit toDoEdit = ToDoEdit.builder()
-                .title("제목입니다.")
+                .title(null)
                 .content("내용")
                 .build();
 
@@ -146,6 +146,32 @@ class ToDoServiceTest {
         ToDo changeToDo = toDoRepository.findById(toDo.getId())
                 .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id = " + toDo.getId()));
 
+        assertEquals("내용", changeToDo.getContent());
+    }
+
+    @Test
+    @DisplayName("글 내용 수정")
+    void test6() throws Exception {
+        //given
+        ToDo toDo = ToDo.builder()
+                .title("제목입니다.")
+                .content("내용입니다.")
+                .build();
+        toDoRepository.save(toDo);
+
+        ToDoEdit toDoEdit = ToDoEdit.builder()
+                .title(null)
+                .content("내용")
+                .build();
+
+        //when
+        toDoService.edit(toDo.getId(), toDoEdit);
+
+        //then
+        ToDo changeToDo = toDoRepository.findById(toDo.getId())
+                .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id = " + toDo.getId()));
+
+        assertEquals("제목입니다.", changeToDo.getTitle());
         assertEquals("내용", changeToDo.getContent());
     }
 
