@@ -2,6 +2,7 @@ package com.todo.service;
 
 import com.todo.domain.ToDo;
 import com.todo.domain.ToDoEditor;
+import com.todo.exception.ToDoNotFound;
 import com.todo.repository.ToDoRepository;
 import com.todo.request.ToDoCreate;
 import com.todo.request.ToDoEdit;
@@ -9,9 +10,6 @@ import com.todo.request.ToDoSearch;
 import com.todo.response.ToDoResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +36,7 @@ public class ToDoService {
 
     public ToDoResponse get(Long id) {
         ToDo toDo = toDoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 ID입니다."));
+                .orElseThrow(ToDoNotFound::new);
 
         return ToDoResponse.builder()
                 .id(toDo.getId())
@@ -60,7 +58,7 @@ public class ToDoService {
     @Transactional
     public void edit(Long id, ToDoEdit toDoEdit) {
         ToDo toDo = toDoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+                .orElseThrow(ToDoNotFound::new);
 
         ToDoEditor.ToDoEditorBuilder toDoEditorBuilder = toDo.toEditor();
 
@@ -74,7 +72,7 @@ public class ToDoService {
 
     public void delete(Long id) {
         ToDo toDo = toDoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+                .orElseThrow(ToDoNotFound::new);
 
         toDoRepository.delete(toDo);
     }

@@ -1,6 +1,7 @@
 package com.todo.service;
 
 import com.todo.domain.ToDo;
+import com.todo.exception.ToDoNotFound;
 import com.todo.repository.ToDoRepository;
 import com.todo.request.ToDoCreate;
 import com.todo.request.ToDoEdit;
@@ -11,16 +12,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.data.domain.Sort.Direction.*;
 
 @SpringBootTest
 class ToDoServiceTest {
@@ -191,6 +188,64 @@ class ToDoServiceTest {
 
         //then
         assertEquals(0, toDoRepository.count());
+    }
+
+    @Test
+    @DisplayName("글 1개 조회 - 존재하지 않는 글")
+    void test8() throws Exception {
+        //given
+        ToDo toDo = ToDo.builder()
+                .title("제목")
+                .content("반포자이")
+                .build();
+        toDoRepository.save(toDo);
+
+        //expected
+        //예외처리 클래스를 따로 만들어주면
+        // 오류가 명확해진다.
+        assertThrows(ToDoNotFound.class, () -> {
+            toDoService.get(toDo.getId() + 1L);
+        });
+
+    }
+
+    @Test
+    @DisplayName("게시글 삭제 - 존재하지 않는 글")
+    void test9() throws Exception {
+
+        //given
+        ToDo toDo = ToDo.builder()
+                .title("제목입니다.")
+                .content("내용입니다.")
+                .build();
+        toDoRepository.save(toDo);
+
+        //expected
+        assertThrows(ToDoNotFound.class, () -> {
+            toDoService.delete(toDo.getId() + 1L);
+        });
+    }
+
+    @Test
+    @DisplayName("글 내용 수정 - 존재하지 않는 글")
+    void test10() throws Exception {
+        //given
+        ToDo toDo = ToDo.builder()
+                .title("제목입니다.")
+                .content("내용입니다.")
+                .build();
+        toDoRepository.save(toDo);
+
+        ToDoEdit toDoEdit = ToDoEdit.builder()
+                .title(null)
+                .content("내용")
+                .build();
+
+        //expected
+        assertThrows(ToDoNotFound.class, () -> {
+            toDoService.edit(toDo.getId() + 1L, toDoEdit);
+        });
+
     }
 
 
