@@ -1,6 +1,5 @@
 package com.todo.controller;
 
-import com.todo.domain.ToDo;
 import com.todo.request.ToDoCreate;
 import com.todo.request.ToDoEdit;
 import com.todo.request.ToDoSearch;
@@ -9,8 +8,6 @@ import com.todo.service.ToDoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

@@ -1,7 +1,6 @@
 package com.todo.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.todo.domain.QToDo;
 import com.todo.domain.ToDo;
 import com.todo.request.ToDoSearch;
 import lombok.RequiredArgsConstructor;
