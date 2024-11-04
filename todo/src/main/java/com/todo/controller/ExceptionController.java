@@ -1,8 +1,11 @@
 package com.todo.controller;
 
+import com.todo.exception.InvalidRequest;
+import com.todo.exception.ToDoException;
 import com.todo.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,8 +18,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class ExceptionController {
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorResponse invalidRequestHandler(MethodArgumentNotValidException e) {
         ErrorResponse response = ErrorResponse.builder()
@@ -30,4 +33,22 @@ public class ExceptionController {
 
         return response;
     }
+
+    @ResponseBody
+    @ExceptionHandler(ToDoException.class)
+    public ResponseEntity<ErrorResponse> ToDoException(ToDoException e) {
+        int statusCode = e.getStatusCode();
+
+        ErrorResponse body = ErrorResponse.builder()
+                .code(String.valueOf(statusCode))
+                .message(e.getMessage())
+                .validation(e.getValidation())
+                .build();
+
+        ResponseEntity<ErrorResponse> response = ResponseEntity.status(statusCode)
+                .body(body);
+
+        return response;
+    }
+
 }

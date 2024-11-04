@@ -1,5 +1,6 @@
 package com.todo.controller;
 
+import com.todo.exception.InvalidRequest;
 import com.todo.request.ToDoCreate;
 import com.todo.request.ToDoEdit;
 import com.todo.request.ToDoSearch;
@@ -73,6 +74,7 @@ public class ToDoController {
 
     @PostMapping("/todos")
     public void todos(@RequestBody @Valid ToDoCreate request) {
+        request.validate();
         toDoService.write(request);
     }
 
