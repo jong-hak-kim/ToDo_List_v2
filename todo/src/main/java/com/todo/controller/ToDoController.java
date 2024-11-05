@@ -1,6 +1,5 @@
 package com.todo.controller;
 
-import com.todo.exception.InvalidRequest;
 import com.todo.request.ToDoCreate;
 import com.todo.request.ToDoEdit;
 import com.todo.request.ToDoSearch;
