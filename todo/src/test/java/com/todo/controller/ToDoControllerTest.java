@@ -5,7 +5,6 @@ import com.todo.domain.ToDo;
 import com.todo.repository.ToDoRepository;
 import com.todo.request.ToDoCreate;
 import com.todo.request.ToDoEdit;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +18,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -339,5 +337,12 @@ class ToDoControllerTest {
                 .andDo(print());
 
     }
+
+    // Spring RestDocs
+    // - 운영코드에 영향을 주지 않는다
+    // - 코드 수정 -> 문서를 수정하지 않으면
+    // 코드(기능) < - > 문서와 달라서 신뢰성이 떨어진다
+    // - Test 케이스를 실행한 후 문서를 자동으로 생성해준다.
+    // -> 신뢰성이 높아진다
 
 }
