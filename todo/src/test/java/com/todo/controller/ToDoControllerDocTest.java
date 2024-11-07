@@ -1,41 +1,45 @@
 package com.todo.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.todo.domain.ToDo;
 import com.todo.repository.ToDoRepository;
-import org.junit.jupiter.api.BeforeEach;
+import com.todo.request.ToDoCreate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.restdocs.payload.PayloadDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.http.MediaType.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
+@AutoConfigureMockMvc
+@AutoConfigureRestDocs(uriScheme = "https", uriHost = "api.todo.com", uriPort = 443)
 @ExtendWith(RestDocumentationExtension.class)
 public class ToDoControllerDocTest {
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private ToDoRepository toDoRepository;
-
-    @BeforeEach
-    void setUp(WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentation) {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-                .apply(documentationConfiguration(restDocumentation))
-                .build();
-    }
 
     @Test
     @DisplayName("글 단건 조회 테스트")
@@ -53,7 +57,43 @@ public class ToDoControllerDocTest {
                         .accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("index"));
+                .andDo(document("index",
+                        pathParameters(
+                                parameterWithName("toDoId").description("할 일 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").description("할 일 ID"),
+                                fieldWithPath("title").description("제목"),
+                                fieldWithPath("content").description("내용")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("글 등록")
+    void test2() throws Exception {
+        //given
+        ToDoCreate request = ToDoCreate.builder()
+                .title("할 일")
+                .content("반포자이.")
+                .build();
+
+        String json = objectMapper.writeValueAsString(request);
+
+
+        // expected
+        this.mockMvc.perform(post("/todos")
+                        .contentType(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("index",
+                        requestFields(
+                                PayloadDocumentation.fieldWithPath("title").description("제목"),
+                                PayloadDocumentation.fieldWithPath("content").description("내용")
+                        )
+                ));
     }
 
 
