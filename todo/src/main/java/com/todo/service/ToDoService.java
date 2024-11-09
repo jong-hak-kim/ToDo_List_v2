@@ -31,6 +31,8 @@ public class ToDoService {
                 .content(toDoCreate.getContent())
                 .build();
 
+        System.out.println("hello world!!");
+
         toDoRepository.save(toDo);
     }
 
