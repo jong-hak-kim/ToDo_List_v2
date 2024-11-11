@@ -1,6 +1,4 @@
 package com.todo.controller;
-
-import com.todo.exception.InvalidRequest;
 import com.todo.exception.ToDoException;
 import com.todo.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
