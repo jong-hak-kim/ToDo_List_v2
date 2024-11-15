@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import axios from 'axios'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const todos = ref([])
 
+const router = useRouter()
+
 axios.get('/api/todos?page=1&size=5').then(response => {
   response.data.forEach((r: any) => {
-    todos.value.push(r);
+    todos.value.push(r)
   })
 })
 </script>
@@ -15,7 +18,7 @@ axios.get('/api/todos?page=1&size=5').then(response => {
   <ul>
     <li v-for="todo in todos" :key="todo.id">
       <div>
-        {{ todo.title }}
+        <router-link :to="{name: `read`, params: {todoId: todo.id}}">{{ todo.title }}</router-link>
       </div>
 
       <div>
