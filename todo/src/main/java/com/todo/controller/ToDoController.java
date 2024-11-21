@@ -72,9 +72,16 @@ public class ToDoController {
     private final ToDoService toDoService;
 
     @PostMapping("/todos")
-    public void todos(@RequestBody @Valid ToDoCreate request) {
-        request.validate();
-        toDoService.write(request);
+    public void todos(@RequestBody @Valid ToDoCreate request, @RequestHeader String authorization) {
+        // 인증 방법
+        //1. GET Parameter
+        //2. POST(body) value (하지만 POST 바디로 받게 되면
+        // 현재 받고 있는 값과 인증 값을 같이 받아야하기 때문에 좋은 방법이 아니다)
+        //3. Header
+        if (authorization.equals("todo")) {
+            request.validate();
+            toDoService.write(request);
+        }
     }
 
     /**
@@ -97,13 +104,17 @@ public class ToDoController {
     }
 
     @PatchMapping("/todos/{toDoId}")
-    public void edit(@PathVariable Long toDoId, @RequestBody @Valid ToDoEdit request) {
-        toDoService.edit(toDoId, request);
+    public void edit(@PathVariable Long toDoId, @RequestBody @Valid ToDoEdit request, @RequestHeader String authorization) {
+        if (authorization.equals("todo")) {
+            toDoService.edit(toDoId, request);
+        }
     }
 
     @DeleteMapping("/todos/{toDoId}")
-    public void delete(@PathVariable Long toDoId) {
-        toDoService.delete(toDoId);
+    public void delete(@PathVariable Long toDoId, @RequestHeader String authorization) {
+        if (authorization.equals("todo")) {
+            toDoService.delete(toDoId);
+        }
     }
 
 
