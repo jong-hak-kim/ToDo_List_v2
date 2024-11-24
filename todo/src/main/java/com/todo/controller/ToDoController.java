@@ -1,10 +1,12 @@
 package com.todo.controller;
 
+import com.todo.config.data.UserSession;
 import com.todo.request.ToDoCreate;
 import com.todo.request.ToDoEdit;
 import com.todo.request.ToDoSearch;
 import com.todo.response.ToDoResponse;
 import com.todo.service.ToDoService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -71,21 +73,23 @@ public class ToDoController {
 
     private final ToDoService toDoService;
 
-    @GetMapping("/test")
-    public String test() {
-        return "hello";
+    @GetMapping("/foo")
+    public String foo(UserSession userSession) {
+        log.info(">>>{}", userSession.name);
+        return userSession.name;
     }
 
-    @GetMapping("/foo")
-    public String foo() {
-        return "foo";
+    @GetMapping("/bar")
+    public String bar(UserSession userSession) {
+        return "인증이 필요한 페이지";
     }
+
 
     @PostMapping("/todos")
     public void todos(@RequestBody @Valid ToDoCreate request) {
         // 인증 방법
         //1. GET Parameter
-        //2. POST(body) value (하지만 POST 바디로 받게 되면
+        //2. POST(body) value (하지만 POST 바디 로 받게 되면
         // 현재 받고 있는 값과 인증 값을 같이 받아야하기 때문에 좋은 방법이 아니다)
         //3. Header
         request.validate();
