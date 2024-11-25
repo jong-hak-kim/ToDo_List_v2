@@ -5,7 +5,7 @@ spring:
       path: /h2-console
 
   datasource:
-    url: jdbc:h2:mem:todolist
+    url: jdbc:h2:mem:todolist;NON_KEYWORDS=USER
     username: sa
     password:
     driver-class-name: org.h2.Driver
@@ -18,6 +18,12 @@ spring:
         one-indexed-parameters: true
         default-page-size: 5
 
+  jpa:
+    defer-datasource-initialization: true
+
+sql:
+  init:
+    mode: always
 
 server:
   servlet:
