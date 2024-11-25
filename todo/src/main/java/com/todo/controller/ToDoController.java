@@ -6,7 +6,6 @@ import com.todo.request.ToDoEdit;
 import com.todo.request.ToDoSearch;
 import com.todo.response.ToDoResponse;
 import com.todo.service.ToDoService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -74,9 +73,9 @@ public class ToDoController {
     private final ToDoService toDoService;
 
     @GetMapping("/foo")
-    public String foo(UserSession userSession) {
-        log.info(">>>{}", userSession.name);
-        return userSession.name;
+    public Long foo(UserSession userSession) {
+        log.info(">>>{}", userSession.id);
+        return userSession.id;
     }
 
     @GetMapping("/bar")
