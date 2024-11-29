@@ -1,13 +1,15 @@
 package com.todo.config;
 
 import com.todo.config.data.UserSession;
-import com.todo.domain.Session;
 import com.todo.exception.Unauthorized;
 import com.todo.repository.SessionRepository;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -19,6 +21,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class AuthResolver implements HandlerMethodArgumentResolver {
 
     private final SessionRepository sessionRepository;
+    private static final String KEY = "cg4OvepxZJrbMzO0i2rPDEKpr0CCsuuIQV8w8plXhbk=";
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -27,23 +30,25 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
-        if(servletRequest == null){
-            log.error("servletRequest null");
-            throw new Unauthorized();
-        }
-        Cookie[] cookies = servletRequest.getCookies();
-        if (cookies.length == 0) {
-            log.error("쿠키가 없음");
+        String jws = webRequest.getHeader("Authoirzation");
+        if (jws == null || jws.equals("")) {
             throw new Unauthorized();
         }
 
-        String accessToken = cookies[0].getValue();
+        byte[] decodedKey = Base64.decodeBase64(KEY);
 
-        // 데이터베이스 사용자 확인 작업
-        Session session = sessionRepository.findByAccessToken(accessToken)
-                .orElseThrow(Unauthorized::new);
+        try {
+            Jws<Claims> claims = Jwts.parser()
+                    .setSigningKey(decodedKey)
+                    .build()
+                    .parseSignedClaims(jws);
 
-        return new UserSession(session.getUser().getId());
+            log.info(">>>>>>>>>>>", claims);
+        } catch (JwtException e) {
+            throw new Unauthorized();
+        }
+
+        return null;
+//        return new UserSession();
     }
 }
