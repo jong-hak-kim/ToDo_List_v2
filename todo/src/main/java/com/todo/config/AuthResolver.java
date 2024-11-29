@@ -30,7 +30,7 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        String jws = webRequest.getHeader("Authoirzation");
+        String jws = webRequest.getHeader("Authorization");
         if (jws == null || jws.equals("")) {
             throw new Unauthorized();
         }
@@ -42,13 +42,10 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
                     .setSigningKey(decodedKey)
                     .build()
                     .parseSignedClaims(jws);
-
-            log.info(">>>>>>>>>>>", claims);
+            String userId = claims.getBody().getSubject();
+            return new UserSession(Long.parseLong(userId));
         } catch (JwtException e) {
             throw new Unauthorized();
         }
-
-        return null;
-//        return new UserSession();
     }
 }

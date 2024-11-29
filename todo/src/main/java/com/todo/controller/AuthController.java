@@ -25,13 +25,13 @@ public class AuthController {
 
     @PostMapping("/auth/login")
     public SessionResponse login(@RequestBody Login login) {
-        String accessToken = authService.signIn(login);
+        Long userId = authService.signIn(login);
 
         SecretKey key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(KEY));
 
         //key를 byte로 뽑아내서 String으로 인코더하면 strKey가 나온다
         String jws = Jwts.builder()
-                .subject("Joe")
+                .setSubject(String.valueOf(userId))
                 .signWith(key)
                 .compact();
 
