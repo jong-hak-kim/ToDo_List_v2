@@ -29,3 +29,8 @@ server:
   servlet:
     encoding:
       force-response: true
+
+todo:
+  hello:
+    hobby: "dd"
+    age: 23
