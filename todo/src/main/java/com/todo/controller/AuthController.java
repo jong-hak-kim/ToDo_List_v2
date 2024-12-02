@@ -2,6 +2,7 @@ package com.todo.controller;
 
 import com.todo.config.AppConfig;
 import com.todo.request.Login;
+import com.todo.request.SignUp;
 import com.todo.response.SessionResponse;
 import com.todo.service.AuthService;
 import io.jsonwebtoken.Jwts;
@@ -37,5 +38,10 @@ public class AuthController {
                 .compact();
 
         return new SessionResponse(jws);
+    }
+
+    @PostMapping("/auth/signup")
+    public void signup(@RequestBody SignUp signup) {
+        authService.signup(signup);
     }
 }

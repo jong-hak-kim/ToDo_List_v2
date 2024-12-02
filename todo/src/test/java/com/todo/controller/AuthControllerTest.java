@@ -6,6 +6,7 @@ import com.todo.domain.User;
 import com.todo.repository.SessionRepository;
 import com.todo.repository.UserRepository;
 import com.todo.request.Login;
+import com.todo.request.SignUp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -174,6 +175,25 @@ class AuthControllerTest {
                         .header("Authorization", session.getAccessToken() + "-other")
                         .contentType(APPLICATION_JSON) )
                 .andExpect(status().isUnauthorized())
+                .andDo(print());
+
+    }
+
+    @Test
+    @DisplayName("회원가입")
+    void test6() throws Exception {
+        //given
+        SignUp signup = SignUp.builder()
+                .email("whdgkr9070@naver.com")
+                .password("1234")
+                .name("jonghak")
+                .build();
+
+        //expected
+        mockMvc.perform(post("/auth/signup")
+                        .content(objectMapper.writeValueAsString(signup))
+                        .contentType(APPLICATION_JSON) )
+                .andExpect(status().isOk())
                 .andDo(print());
 
     }
