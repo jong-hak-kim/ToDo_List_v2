@@ -31,6 +31,4 @@ server:
       force-response: true
 
 todo:
-  hello:
-    hobby: "dd"
-    age: 23
+  jwt-key: "cg4OvepxZJrbMzO0i2rPDEKpr0CCsuuIQV8w8plXhbk="
