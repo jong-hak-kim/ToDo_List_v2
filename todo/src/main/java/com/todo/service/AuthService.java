@@ -1,6 +1,6 @@
 package com.todo.service;
 
-import com.todo.domain.Session;
+import com.todo.crypto.PasswordEncoder;
 import com.todo.domain.User;
 import com.todo.exception.AlreadyExistsEmailException;
 import com.todo.exception.InvalidSigninInformation;
@@ -8,7 +8,6 @@ import com.todo.repository.UserRepository;
 import com.todo.request.Login;
 import com.todo.request.SignUp;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,10 +21,14 @@ public class AuthService {
 
     @Transactional
     public Long signIn(Login login) {
-        User user = userRepository.findByEmailAndPassword(login.getEmail(), login.getPassword())
+        User user = userRepository.findByEmail(login.getEmail())
                 .orElseThrow(InvalidSigninInformation::new);
 
-        Session session = user.addSession();
+        PasswordEncoder encoder = new PasswordEncoder();
+        boolean matches = encoder.matches(login.getPassword(), user.getPassword());
+        if (!matches) {
+            throw new InvalidSigninInformation();
+        }
 
         return user.getId();
     }
@@ -37,9 +40,9 @@ public class AuthService {
             throw new AlreadyExistsEmailException();
         }
 
-        SCryptPasswordEncoder encoder = new SCryptPasswordEncoder(16, 8, 1, 32, 64);
+        PasswordEncoder encoder = new PasswordEncoder();
 
-        String encryptedPassword = encoder.encode(signup.getPassword());
+        String encryptedPassword = encoder.encrypt(signup.getPassword());
 
 
         User user = User.builder()
