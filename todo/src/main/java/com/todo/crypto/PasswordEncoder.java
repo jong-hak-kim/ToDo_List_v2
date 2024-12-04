@@ -1,9 +1,22 @@
 package com.todo.crypto;
 
-public interface PasswordEncoder {
+import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 
-    String encrypt(String rawPassword);
+public class PasswordEncoder {
 
-    boolean matches(String rawPassword, String encryptedPassword);
+    private static final SCryptPasswordEncoder encoder = new SCryptPasswordEncoder(
+            16,
+            8,
+            1,
+            32,
+            64);
+
+    public String encrypt(String rawPassword){
+        return encoder.encode(rawPassword);
+    }
+
+    public boolean matches(String rawPassword, String encryptedPassword){
+        return encoder.matches(rawPassword, encryptedPassword);
+    }
 
 }
