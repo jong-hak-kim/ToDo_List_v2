@@ -1,6 +1,6 @@
 package com.todo.service;
 
-import com.todo.crypto.PasswordEncoder;
+import com.todo.crypto.ScryptPasswordEncoder;
 import com.todo.domain.User;
 import com.todo.exception.AlreadyExistsEmailException;
 import com.todo.exception.InvalidSigninInformation;
@@ -12,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
+@ActiveProfiles("test")
 class AuthServiceTest {
 
     @Autowired
@@ -56,9 +58,10 @@ class AuthServiceTest {
         assertEquals(1, userRepository.count());
 
         User user = userRepository.findAll().iterator().next();
+
         assertEquals("whdgkr9070@naver.com", user.getEmail());
         assertNotNull(user.getPassword());
-        assertNotEquals("1234", user.getPassword());
+        assertEquals("1234", user.getPassword());
         assertEquals("jonghak", user.getName());
     }
 
@@ -91,7 +94,7 @@ class AuthServiceTest {
     @DisplayName("로그인 성공")
     void test3() throws Exception {
         //given
-        PasswordEncoder encoder = new PasswordEncoder();
+        ScryptPasswordEncoder encoder = new ScryptPasswordEncoder();
         String encryptedPassword = encoder.encrypt("1234");
 
         User user = User.builder()
@@ -117,7 +120,7 @@ class AuthServiceTest {
     @DisplayName("로그인 시 비밀번호 틀림")
     void test4() throws Exception {
         //given
-        PasswordEncoder encoder = new PasswordEncoder();
+        ScryptPasswordEncoder encoder = new ScryptPasswordEncoder();
         String encryptedPassword = encoder.encrypt("1234");
 
         User user = User.builder()
