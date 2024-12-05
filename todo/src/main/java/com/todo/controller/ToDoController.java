@@ -1,6 +1,5 @@
 package com.todo.controller;
 
-import com.todo.config.data.UserSession;
 import com.todo.request.ToDoCreate;
 import com.todo.request.ToDoEdit;
 import com.todo.request.ToDoSearch;
@@ -71,18 +70,6 @@ import java.util.List;
 public class ToDoController {
 
     private final ToDoService toDoService;
-
-    @GetMapping("/foo")
-    public Long foo(UserSession userSession) {
-        log.info(">>>{}", userSession.id);
-        return userSession.id;
-    }
-
-    @GetMapping("/bar")
-    public String bar(UserSession userSession) {
-        return "인증이 필요한 페이지";
-    }
-
 
     @PostMapping("/todos")
     public void todos(@RequestBody @Valid ToDoCreate request) {

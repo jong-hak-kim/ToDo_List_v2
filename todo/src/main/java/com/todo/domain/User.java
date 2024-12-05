@@ -1,14 +1,15 @@
 package com.todo.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -27,9 +28,6 @@ public class User {
 
     private LocalDateTime createdAt;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private List<Session> sessions = new ArrayList<>();
-
     @Builder
     public User(String name, String email, String password) {
         this.name = name;
@@ -38,12 +36,4 @@ public class User {
         this.createdAt = LocalDateTime.now();
     }
 
-    public Session addSession() {
-        Session session = Session.builder()
-                .user(this)
-                .build();
-        sessions.add(session);
-
-        return session;
-    }
 }

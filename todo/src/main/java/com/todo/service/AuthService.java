@@ -3,13 +3,10 @@ package com.todo.service;
 import com.todo.crypto.PasswordEncoder;
 import com.todo.domain.User;
 import com.todo.exception.AlreadyExistsEmailException;
-import com.todo.exception.InvalidSigninInformation;
 import com.todo.repository.UserRepository;
-import com.todo.request.Login;
 import com.todo.request.SignUp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -19,19 +16,6 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    @Transactional
-    public Long signIn(Login login) {
-        User user = userRepository.findByEmail(login.getEmail())
-                .orElseThrow(InvalidSigninInformation::new);
-
-        boolean matches = passwordEncoder.matches(login.getPassword(), user.getPassword());
-        if (!matches) {
-            throw new InvalidSigninInformation();
-        }
-
-        return user.getId();
-    }
 
     public void signup(SignUp signup) {
 
