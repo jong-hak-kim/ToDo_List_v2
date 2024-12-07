@@ -71,7 +71,7 @@ class AuthServiceTest {
         User user = User.builder()
                 .email("whdgkr9070@naver.com")
                 .password("1234")
-                .name("joghak")
+                .name("jonghak")
                 .build();
 
         userRepository.save(user);
