@@ -24,6 +24,9 @@ spring:
   session:
     timeout: 86400
 
+  jackson:
+    time-zone: Asia/Seoul
+
 
 server:
   servlet:

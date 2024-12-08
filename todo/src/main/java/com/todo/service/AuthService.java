@@ -1,11 +1,11 @@
 package com.todo.service;
 
-import com.todo.crypto.PasswordEncoder;
 import com.todo.domain.User;
 import com.todo.exception.AlreadyExistsEmailException;
 import com.todo.repository.UserRepository;
 import com.todo.request.SignUp;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -24,7 +24,7 @@ public class AuthService {
             throw new AlreadyExistsEmailException();
         }
 
-        String encryptedPassword = passwordEncoder.encrypt(signup.getPassword());
+        String encryptedPassword = passwordEncoder.encode(signup.getPassword());
 
 
         User user = User.builder()
