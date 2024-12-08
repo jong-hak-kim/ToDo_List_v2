@@ -21,11 +21,17 @@ spring:
   jpa:
     defer-datasource-initialization: true
 
+  session:
+    timeout: 86400
+
 
 server:
   servlet:
     encoding:
       force-response: true
+    session:
+      cookie:
+        max-age: 172800
 
 todo:
   jwt-key: "cg4OvepxZJrbMzO0i2rPDEKpr0CCsuuIQV8w8plXhbk="

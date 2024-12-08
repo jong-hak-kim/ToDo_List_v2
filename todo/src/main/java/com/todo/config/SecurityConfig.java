@@ -42,7 +42,7 @@ public class SecurityConfig {
                                 .loginProcessingUrl("/auth/login")
                                 .usernameParameter("username")
                                 .passwordParameter("password")
-                                .defaultSuccessUrl("/",true)
+                                .defaultSuccessUrl("/")
                 )
                 .userDetailsService(userDetailsService())
                 .csrf(AbstractHttpConfigurer::disable)
