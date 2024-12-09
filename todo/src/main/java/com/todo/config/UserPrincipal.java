@@ -13,9 +13,10 @@ public class UserPrincipal extends User {
     // authority: 권한 -> 글쓰기, 글 읽기, 사용자 정지 시키기
 
     public UserPrincipal(com.todo.domain.User user) {
-        super(user.getEmail(), user.getPassword(), List.of(
-                new SimpleGrantedAuthority("ROLE_ADMIN"),
-                new SimpleGrantedAuthority("WRITE")));
+        super(user.getEmail(), user.getPassword(),
+                List.of(
+                        new SimpleGrantedAuthority("ROLE_USER")
+                ));
         this.userId = user.getId();
     }
 
