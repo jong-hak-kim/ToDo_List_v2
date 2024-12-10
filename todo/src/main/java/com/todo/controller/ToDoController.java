@@ -8,6 +8,7 @@ import com.todo.service.ToDoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -71,6 +72,7 @@ public class ToDoController {
 
     private final ToDoService toDoService;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/todos")
     public void todos(@RequestBody @Valid ToDoCreate request) {
         // 인증 방법
@@ -101,11 +103,13 @@ public class ToDoController {
         return toDoService.getList(toDoSearch);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PatchMapping("/todos/{toDoId}")
     public void edit(@PathVariable Long toDoId, @RequestBody @Valid ToDoEdit request) {
         toDoService.edit(toDoId, request);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/todos/{toDoId}")
     public void delete(@PathVariable Long toDoId) {
         toDoService.delete(toDoId);
