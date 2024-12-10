@@ -1,6 +1,5 @@
 package com.todo.request;
 
-import com.todo.exception.InvalidRequest;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,11 +21,5 @@ public class ToDoCreate {
     public ToDoCreate(String title, String content) {
         this.title = title;
         this.content = content;
-    }
-
-    public void validate() {
-        if (title.contains("바보")) {
-            throw new InvalidRequest("title", "제목에 바보를 포함할 수 없습니다.");
-        }
     }
 }

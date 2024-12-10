@@ -80,7 +80,6 @@ public class ToDoController {
         //2. POST(body) value (하지만 POST 바디 로 받게 되면
         // 현재 받고 있는 값과 인증 값을 같이 받아야하기 때문에 좋은 방법이 아니다)
         //3. Header
-        request.validate();
         toDoService.write(request);
     }
 

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -22,8 +23,9 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 //jsonPath 검증 방법 공부
 
@@ -73,6 +75,7 @@ class ToDoControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "whdgkr9070@naver.com", roles = {"ADMIN"})
     @DisplayName("글 작성 요청 시 title값은 필수다.")
     void test2() throws Exception {
 
@@ -97,6 +100,7 @@ class ToDoControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "whdgkr9070@naver.com", roles = {"ADMIN"})
     @DisplayName("글 작성 요청 시 DB에 값이 저장된다.")
     void test3() throws Exception {
 
@@ -122,7 +126,8 @@ class ToDoControllerTest {
     }
 
     @Test
-    @DisplayName("글 작성 요청 시 DB에 값이 저장된다.")
+    @WithMockUser(username = "whdgkr9070@naver.com", roles = {"ADMIN"})
+    @DisplayName("글 작성")
     void test4() throws Exception {
 
         //given
@@ -230,6 +235,7 @@ class ToDoControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "whdgkr9070@naver.com", roles = {"ADMIN"})
     @DisplayName("글 제목 수정")
     void test8() throws Exception {
         //given
@@ -245,6 +251,7 @@ class ToDoControllerTest {
                 .build();
 
         mockMvc.perform(patch("/todos/{toDoId}", toDo.getId())
+
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(toDoEdit)))
                 .andExpect(status().isOk())
@@ -253,6 +260,7 @@ class ToDoControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "whdgkr9070@naver.com", roles = {"ADMIN"})
     @DisplayName("게시글 삭제")
     void test9() throws Exception {
         //given
@@ -270,16 +278,18 @@ class ToDoControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "whdgkr9070@naver.com", roles = {"ADMIN"})
     @DisplayName("존재하지 않는 게시글 조회")
     void test10() throws Exception {
         //expected
-        mockMvc.perform(delete("/todos/{toDoId}", 1L)
+        mockMvc.perform(get("/todos/{toDoId}", 1L)
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andDo(print());
     }
 
     @Test
+    @WithMockUser(username = "whdgkr9070@naver.com", roles = {"ADMIN"})
     @DisplayName("존재하지 않는 게시글 수정")
     void test11() throws Exception {
 
@@ -294,28 +304,6 @@ class ToDoControllerTest {
                         .content(objectMapper.writeValueAsString(toDoEdit)))
                 .andExpect(status().isNotFound())
                 .andDo(print());
-    }
-
-    @Test
-    @DisplayName("게시글 작성 시 제목이 '바보'는 포함될 수 없다.")
-    void test12() throws Exception {
-
-        //given
-        ToDoCreate request = ToDoCreate.builder()
-                .title("나는 바보입니다.")
-                .content("반포자이.")
-                .build();
-
-        String json = objectMapper.writeValueAsString(request);
-
-        //when
-        mockMvc.perform(post("/todos")
-                        .contentType(APPLICATION_JSON)
-                        .content(json)
-                )
-                .andExpect(status().isBadRequest())
-                .andDo(print());
-
     }
 
     // Spring RestDocs
