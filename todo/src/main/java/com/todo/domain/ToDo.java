@@ -17,10 +17,15 @@ public class ToDo {
     @Lob
     private String content;
 
+    @ManyToOne
+    @JoinColumn
+    private User user;
+
     @Builder
-    public ToDo(String title, String content) {
+    public ToDo(String title, String content, User user) {
         this.title = title;
         this.content = content;
+        this.user = user;
     }
 
     public ToDoEditor.ToDoEditorBuilder toEditor() {
@@ -32,5 +37,9 @@ public class ToDo {
     public void edit(ToDoEditor toDoEditor) {
         title = toDoEditor.getTitle();
         content = toDoEditor.getContent();
+    }
+
+    public Long getUserId() {
+        return this.user.getId();
     }
 }

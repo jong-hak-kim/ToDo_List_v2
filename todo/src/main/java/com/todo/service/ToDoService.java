@@ -2,8 +2,11 @@ package com.todo.service;
 
 import com.todo.domain.ToDo;
 import com.todo.domain.ToDoEditor;
+import com.todo.domain.User;
 import com.todo.exception.ToDoNotFound;
+import com.todo.exception.UserNotFound;
 import com.todo.repository.ToDoRepository;
+import com.todo.repository.UserRepository;
 import com.todo.request.ToDoCreate;
 import com.todo.request.ToDoEdit;
 import com.todo.request.ToDoSearch;
@@ -21,12 +24,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ToDoService {
 
+    private final UserRepository userRepository;
     private final ToDoRepository toDoRepository;
 
-    public void write(ToDoCreate toDoCreate) {
+    public void write(Long userId, ToDoCreate toDoCreate) {
         // toDocreate -> Entity로 변환시켜줘야 한다.
 
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFound::new);
+
         ToDo toDo = ToDo.builder()
+                .user(user)
                 .title(toDoCreate.getTitle())
                 .content(toDoCreate.getContent())
                 .build();

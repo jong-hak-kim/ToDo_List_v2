@@ -1,5 +1,6 @@
 package com.todo.controller;
 
+import com.todo.config.UserPrincipal;
 import com.todo.request.ToDoCreate;
 import com.todo.request.ToDoEdit;
 import com.todo.request.ToDoSearch;
@@ -9,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -72,15 +74,16 @@ public class ToDoController {
 
     private final ToDoService toDoService;
 
+    //    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/todos")
-    public void todos(@RequestBody @Valid ToDoCreate request) {
+    public void todos(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Valid ToDoCreate request) {
         // 인증 방법
         //1. GET Parameter
         //2. POST(body) value (하지만 POST 바디 로 받게 되면
         // 현재 받고 있는 값과 인증 값을 같이 받아야하기 때문에 좋은 방법이 아니다)
         //3. Header
-        toDoService.write(request);
+        toDoService.write(userPrincipal.getUserId(), request);
     }
 
     /**
@@ -108,7 +111,8 @@ public class ToDoController {
         toDoService.edit(toDoId, request);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') && hasPermission(#toDoId, 'POST', 'DELETE')")
     @DeleteMapping("/todos/{toDoId}")
     public void delete(@PathVariable Long toDoId) {
         toDoService.delete(toDoId);
