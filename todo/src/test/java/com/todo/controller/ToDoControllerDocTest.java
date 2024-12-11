@@ -1,9 +1,12 @@
 package com.todo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.todo.config.ToDoMockUser;
 import com.todo.domain.ToDo;
 import com.todo.repository.ToDoRepository;
+import com.todo.repository.UserRepository;
 import com.todo.request.ToDoCreate;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,18 +16,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.payload.PayloadDocumentation;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.http.MediaType.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -41,6 +43,15 @@ public class ToDoControllerDocTest {
 
     @Autowired
     private ToDoRepository toDoRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @AfterEach
+    void clean() {
+        toDoRepository.deleteAll();
+        userRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("글 단건 조회 테스트")
@@ -71,7 +82,7 @@ public class ToDoControllerDocTest {
     }
 
     @Test
-    @WithMockUser(username = "whdgkr9070@naver.com", roles = {"ADMIN"})
+    @ToDoMockUser
     @DisplayName("글 등록")
     void test2() throws Exception {
         //given

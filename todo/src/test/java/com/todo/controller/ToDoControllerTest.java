@@ -1,11 +1,14 @@
 package com.todo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.todo.config.ToDoMockUser;
 import com.todo.domain.ToDo;
+import com.todo.domain.User;
 import com.todo.repository.ToDoRepository;
+import com.todo.repository.UserRepository;
 import com.todo.request.ToDoCreate;
 import com.todo.request.ToDoEdit;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,9 +72,13 @@ class ToDoControllerTest {
     @Autowired
     private ToDoRepository toDoRepository;
 
-    @BeforeEach
+    @Autowired
+    private UserRepository userRepository;
+
+    @AfterEach
     void clean() {
         toDoRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
@@ -100,7 +107,8 @@ class ToDoControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "whdgkr9070@naver.com", roles = {"ADMIN"})
+//    @WithMockUser(username = "whdgkr9070@naver.com", roles = {"ADMIN"})
+    @ToDoMockUser
     @DisplayName("글 작성 요청 시 DB에 값이 저장된다.")
     void test3() throws Exception {
 
@@ -126,7 +134,8 @@ class ToDoControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "whdgkr9070@naver.com", roles = {"ADMIN"})
+//    @WithMockUser(username = "whdgkr9070@naver.com", roles = {"ADMIN"})
+    @ToDoMockUser
     @DisplayName("글 작성")
     void test4() throws Exception {
 
@@ -140,7 +149,7 @@ class ToDoControllerTest {
 
         //when
         mockMvc.perform(post("/todos")
-                        .header("authorization","todo")
+                        .header("authorization", "todo")
                         .contentType(APPLICATION_JSON)
                         .content(json)
                 )
@@ -160,9 +169,18 @@ class ToDoControllerTest {
     @DisplayName("글 1개 조회")
     void test5() throws Exception {
         //given
+        User user = User.builder()
+                .name("종학")
+                .email("whdgkr9070@naver.com")
+                .password("1234")
+                .build();
+
+        userRepository.save(user);
+
         ToDo toDo = ToDo.builder()
                 .title("123456789012345")
                 .content("bar")
+                .user(user)
                 .build();
 
         toDoRepository.save(toDo);
@@ -186,10 +204,19 @@ class ToDoControllerTest {
     @DisplayName("글 여러 개 조회")
     void test6() throws Exception {
         //given
+        User user = User.builder()
+                .name("종학")
+                .email("whdgkr9070@naver.com")
+                .password("1234")
+                .build();
+
+        userRepository.save(user);
+
         List<ToDo> requestToDos = IntStream.range(0, 20)
                 .mapToObj(i -> ToDo.builder()
                         .title("제목 " + i)
                         .content("반포자이 " + i)
+                        .user(user)
                         .build())
                 .collect(Collectors.toList());
         toDoRepository.saveAll(requestToDos);
@@ -216,10 +243,19 @@ class ToDoControllerTest {
     @DisplayName("페이지를 0으로 요청하면 첫 페이지를 가져온다.")
     void test7() throws Exception {
         //given
+        User user = User.builder()
+                .name("종학")
+                .email("whdgkr9070@naver.com")
+                .password("1234")
+                .build();
+
+        userRepository.save(user);
+
         List<ToDo> requestToDos = IntStream.range(0, 20)
                 .mapToObj(i -> ToDo.builder()
                         .title("제목 " + i)
                         .content("반포자이 " + i)
+                        .user(user)
                         .build())
                 .collect(Collectors.toList());
         toDoRepository.saveAll(requestToDos);
@@ -235,13 +271,17 @@ class ToDoControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "whdgkr9070@naver.com", roles = {"ADMIN"})
+    @ToDoMockUser
+//    @WithMockUser(username = "whdgkr9070@naver.com", roles = {"ADMIN"})
     @DisplayName("글 제목 수정")
     void test8() throws Exception {
         //given
+        User user = userRepository.findAll().get(0);
+
         ToDo toDo = ToDo.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
+                .user(user)
                 .build();
         toDoRepository.save(toDo);
 
@@ -260,13 +300,17 @@ class ToDoControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "whdgkr9070@naver.com", roles = {"ADMIN"})
+//    @WithMockUser(username = "whdgkr9070@naver.com", roles = {"ADMIN"})
+    @ToDoMockUser
     @DisplayName("게시글 삭제")
     void test9() throws Exception {
         //given
+        User user = userRepository.findAll().get(0);
+
         ToDo toDo = ToDo.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
+                .user(user)
                 .build();
         toDoRepository.save(toDo);
 
@@ -278,7 +322,8 @@ class ToDoControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "whdgkr9070@naver.com", roles = {"ADMIN"})
+//    @WithMockUser(username = "whdgkr9070@naver.com", roles = {"ADMIN"})
+    @ToDoMockUser
     @DisplayName("존재하지 않는 게시글 조회")
     void test10() throws Exception {
         //expected
@@ -289,7 +334,8 @@ class ToDoControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "whdgkr9070@naver.com", roles = {"ADMIN"})
+//    @WithMockUser(username = "whdgkr9070@naver.com", roles = {"ADMIN"})
+    @ToDoMockUser
     @DisplayName("존재하지 않는 게시글 수정")
     void test11() throws Exception {
 

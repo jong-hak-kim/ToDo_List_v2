@@ -1,8 +1,10 @@
 package com.todo.service;
 
 import com.todo.domain.ToDo;
+import com.todo.domain.User;
 import com.todo.exception.ToDoNotFound;
 import com.todo.repository.ToDoRepository;
+import com.todo.repository.UserRepository;
 import com.todo.request.ToDoCreate;
 import com.todo.request.ToDoEdit;
 import com.todo.request.ToDoSearch;
@@ -28,22 +30,35 @@ class ToDoServiceTest {
     @Autowired
     private ToDoRepository toDoRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @BeforeEach
     void clean() {
         toDoRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
     @DisplayName("글 작성")
     void test1() throws Exception {
         //given
+        User user = User.builder()
+                .name("종학")
+                .email("whdgkr9070@naver.com")
+                .password("1234")
+                .build();
+
+        userRepository.save(user);
+
+
         ToDoCreate toDoCreate = ToDoCreate.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
                 .build();
 
         //when
-        toDoService.write(toDoCreate);
+        toDoService.write(user.getId(), toDoCreate);
 
         //then
         assertEquals(1L, toDoRepository.count());
