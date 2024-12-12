@@ -35,11 +35,10 @@ public class Comment {
     private Todo todo;
 
     @Builder
-    public Comment(String author, String password, String content, Todo todo) {
+    public Comment(String author, String password, String content) {
         this.author = author;
         this.password = password;
         this.content = content;
-        this.todo = this.todo;
     }
 
     public void setTodo(Todo todo){

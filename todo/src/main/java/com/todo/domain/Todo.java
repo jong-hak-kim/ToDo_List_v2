@@ -1,8 +1,12 @@
 package com.todo.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -24,7 +28,7 @@ public class Todo {
     private User user;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "todo")
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
     @Builder
     public Todo(String title, String content, User user) {
