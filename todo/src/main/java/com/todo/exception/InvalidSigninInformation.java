@@ -1,6 +1,6 @@
 package com.todo.exception;
 
-public class InvalidSigninInformation extends ToDoException {
+public class InvalidSigninInformation extends TodoException {
 
     private static final String MESSAGE = "아이디/비밀번호가 올바르지 않습니다.";
 

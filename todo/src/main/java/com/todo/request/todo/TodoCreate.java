@@ -1,4 +1,4 @@
-package com.todo.request;
+package com.todo.request.todo;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class ToDoCreate {
+public class TodoCreate {
 
     @NotBlank(message = "타이틀을 입력하세요.")
     private String title;
@@ -18,7 +18,7 @@ public class ToDoCreate {
     private String content;
 
     @Builder
-    public ToDoCreate(String title, String content) {
+    public TodoCreate(String title, String content) {
         this.title = title;
         this.content = content;
     }

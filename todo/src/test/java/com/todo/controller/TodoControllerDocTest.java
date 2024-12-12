@@ -2,10 +2,10 @@ package com.todo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.todo.config.ToDoMockUser;
-import com.todo.domain.ToDo;
-import com.todo.repository.ToDoRepository;
+import com.todo.domain.Todo;
+import com.todo.repository.todo.TodoRepository;
 import com.todo.repository.UserRepository;
-import com.todo.request.ToDoCreate;
+import com.todo.request.todo.TodoCreate;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs(uriScheme = "https", uriHost = "api.todo.com", uriPort = 443)
 @ExtendWith(RestDocumentationExtension.class)
-public class ToDoControllerDocTest {
+public class TodoControllerDocTest {
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -42,7 +42,7 @@ public class ToDoControllerDocTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private ToDoRepository toDoRepository;
+    private TodoRepository toDoRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -57,7 +57,7 @@ public class ToDoControllerDocTest {
     @DisplayName("글 단건 조회 테스트")
     void test1() throws Exception {
         //given
-        ToDo toDo = ToDo.builder()
+        Todo toDo = Todo.builder()
                 .title("제목")
                 .content("내용")
                 .build();
@@ -86,7 +86,7 @@ public class ToDoControllerDocTest {
     @DisplayName("글 등록")
     void test2() throws Exception {
         //given
-        ToDoCreate request = ToDoCreate.builder()
+        TodoCreate request = TodoCreate.builder()
                 .title("할 일")
                 .content("반포자이.")
                 .build();

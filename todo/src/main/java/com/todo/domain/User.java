@@ -27,7 +27,7 @@ public class User {
     private LocalDateTime createdAt;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private List<ToDo> todos;
+    private List<Todo> todos;
 
     @Builder
     public User(String name, String email, String password) {

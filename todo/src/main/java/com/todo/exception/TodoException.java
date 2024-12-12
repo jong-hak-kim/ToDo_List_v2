@@ -6,15 +6,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-public abstract class ToDoException extends RuntimeException {
+public abstract class TodoException extends RuntimeException {
 
     public final Map<String, String> validation = new HashMap<>();
 
-    public ToDoException(String message) {
+    public TodoException(String message) {
         super(message);
     }
 
-    public ToDoException(String message, Throwable cause) {
+    public TodoException(String message, Throwable cause) {
         super(message, cause);
     }
 

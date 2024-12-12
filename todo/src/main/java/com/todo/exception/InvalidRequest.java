@@ -3,7 +3,7 @@ package com.todo.exception;
 import lombok.Getter;
 
 @Getter
-public class InvalidRequest extends ToDoException {
+public class InvalidRequest extends TodoException {
 
     private static final String MESSAGE = "잘못된 요청입니다.";
 

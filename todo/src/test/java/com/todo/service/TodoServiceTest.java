@@ -1,14 +1,14 @@
 package com.todo.service;
 
-import com.todo.domain.ToDo;
+import com.todo.domain.Todo;
 import com.todo.domain.User;
-import com.todo.exception.ToDoNotFound;
-import com.todo.repository.ToDoRepository;
+import com.todo.exception.TodoNotFound;
+import com.todo.repository.todo.TodoRepository;
 import com.todo.repository.UserRepository;
-import com.todo.request.ToDoCreate;
-import com.todo.request.ToDoEdit;
-import com.todo.request.ToDoSearch;
-import com.todo.response.ToDoResponse;
+import com.todo.request.todo.TodoCreate;
+import com.todo.request.todo.TodoEdit;
+import com.todo.request.todo.TodoSearch;
+import com.todo.response.TodoResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,13 +22,13 @@ import java.util.stream.IntStream;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class ToDoServiceTest {
+class TodoServiceTest {
 
     @Autowired
-    private ToDoService toDoService;
+    private TodoService toDoService;
 
     @Autowired
-    private ToDoRepository toDoRepository;
+    private TodoRepository toDoRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -52,7 +52,7 @@ class ToDoServiceTest {
         userRepository.save(user);
 
 
-        ToDoCreate toDoCreate = ToDoCreate.builder()
+        TodoCreate toDoCreate = TodoCreate.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
                 .build();
@@ -62,7 +62,7 @@ class ToDoServiceTest {
 
         //then
         assertEquals(1L, toDoRepository.count());
-        ToDo toDo = toDoRepository.findAll().get(0);
+        Todo toDo = toDoRepository.findAll().get(0);
         assertEquals("제목입니다.", toDo.getTitle());
         assertEquals("내용입니다.", toDo.getContent());
     }
@@ -71,14 +71,14 @@ class ToDoServiceTest {
     @DisplayName("글 1개 조회")
     void test2() throws Exception {
         //given
-        ToDo requestToDo = ToDo.builder()
+        Todo requestTodo = Todo.builder()
                 .title("foo")
                 .content("bar")
                 .build();
-        toDoRepository.save(requestToDo);
+        toDoRepository.save(requestTodo);
 
         //when
-        ToDoResponse response = toDoService.get(requestToDo.getId());
+        TodoResponse response = toDoService.get(requestTodo.getId());
 
         //then
         assertNotNull(response);
@@ -91,20 +91,20 @@ class ToDoServiceTest {
     @DisplayName("글 1페이지 조회")
     void test3() throws Exception {
         //given
-        List<ToDo> requestToDos = IntStream.range(0, 20)
-                .mapToObj(i -> ToDo.builder()
+        List<Todo> requestTodos = IntStream.range(0, 20)
+                .mapToObj(i -> Todo.builder()
                         .title("제목 " + i)
                         .content("반포자이 " + i)
                         .build())
                 .collect(Collectors.toList());
-        toDoRepository.saveAll(requestToDos);
+        toDoRepository.saveAll(requestTodos);
 
-        ToDoSearch toDoSearch = ToDoSearch.builder()
+        TodoSearch toDoSearch = TodoSearch.builder()
                 .page(1)
                 .build();
 
         //when
-        List<ToDoResponse> toDos = toDoService.getList(toDoSearch);
+        List<TodoResponse> toDos = toDoService.getList(toDoSearch);
 
         //then
         assertEquals(10L, toDos.size());
@@ -115,13 +115,13 @@ class ToDoServiceTest {
     @DisplayName("글 제목 수정")
     void test4() throws Exception {
         //given
-        ToDo toDo = ToDo.builder()
+        Todo toDo = Todo.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
                 .build();
         toDoRepository.save(toDo);
 
-        ToDoEdit toDoEdit = ToDoEdit.builder()
+        TodoEdit toDoEdit = TodoEdit.builder()
                 .title("제목")
                 .content("내용입니다.")
                 .build();
@@ -130,23 +130,23 @@ class ToDoServiceTest {
         toDoService.edit(toDo.getId(), toDoEdit);
 
         //then
-        ToDo changeToDo = toDoRepository.findById(toDo.getId())
+        Todo changeTodo = toDoRepository.findById(toDo.getId())
                 .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id = " + toDo.getId()));
 
-        assertEquals("제목", changeToDo.getTitle());
+        assertEquals("제목", changeTodo.getTitle());
     }
 
     @Test
     @DisplayName("글 내용 수정")
     void test5() throws Exception {
         //given
-        ToDo toDo = ToDo.builder()
+        Todo toDo = Todo.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
                 .build();
         toDoRepository.save(toDo);
 
-        ToDoEdit toDoEdit = ToDoEdit.builder()
+        TodoEdit toDoEdit = TodoEdit.builder()
                 .title(null)
                 .content("내용")
                 .build();
@@ -155,23 +155,23 @@ class ToDoServiceTest {
         toDoService.edit(toDo.getId(), toDoEdit);
 
         //then
-        ToDo changeToDo = toDoRepository.findById(toDo.getId())
+        Todo changeTodo = toDoRepository.findById(toDo.getId())
                 .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id = " + toDo.getId()));
 
-        assertEquals("내용", changeToDo.getContent());
+        assertEquals("내용", changeTodo.getContent());
     }
 
     @Test
     @DisplayName("글 내용 수정")
     void test6() throws Exception {
         //given
-        ToDo toDo = ToDo.builder()
+        Todo toDo = Todo.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
                 .build();
         toDoRepository.save(toDo);
 
-        ToDoEdit toDoEdit = ToDoEdit.builder()
+        TodoEdit toDoEdit = TodoEdit.builder()
                 .title(null)
                 .content("내용")
                 .build();
@@ -180,11 +180,11 @@ class ToDoServiceTest {
         toDoService.edit(toDo.getId(), toDoEdit);
 
         //then
-        ToDo changeToDo = toDoRepository.findById(toDo.getId())
+        Todo changeTodo = toDoRepository.findById(toDo.getId())
                 .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id = " + toDo.getId()));
 
-        assertEquals("제목입니다.", changeToDo.getTitle());
-        assertEquals("내용", changeToDo.getContent());
+        assertEquals("제목입니다.", changeTodo.getTitle());
+        assertEquals("내용", changeTodo.getContent());
     }
 
     @Test
@@ -192,7 +192,7 @@ class ToDoServiceTest {
     void test7() throws Exception {
 
         //given
-        ToDo toDo = ToDo.builder()
+        Todo toDo = Todo.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
                 .build();
@@ -209,7 +209,7 @@ class ToDoServiceTest {
     @DisplayName("글 1개 조회 - 존재하지 않는 글")
     void test8() throws Exception {
         //given
-        ToDo toDo = ToDo.builder()
+        Todo toDo = Todo.builder()
                 .title("제목")
                 .content("반포자이")
                 .build();
@@ -218,7 +218,7 @@ class ToDoServiceTest {
         //expected
         //예외처리 클래스를 따로 만들어주면
         // 오류가 명확해진다.
-        assertThrows(ToDoNotFound.class, () -> {
+        assertThrows(TodoNotFound.class, () -> {
             toDoService.get(toDo.getId() + 1L);
         });
 
@@ -229,14 +229,14 @@ class ToDoServiceTest {
     void test9() throws Exception {
 
         //given
-        ToDo toDo = ToDo.builder()
+        Todo toDo = Todo.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
                 .build();
         toDoRepository.save(toDo);
 
         //expected
-        assertThrows(ToDoNotFound.class, () -> {
+        assertThrows(TodoNotFound.class, () -> {
             toDoService.delete(toDo.getId() + 1L);
         });
     }
@@ -245,19 +245,19 @@ class ToDoServiceTest {
     @DisplayName("글 내용 수정 - 존재하지 않는 글")
     void test10() throws Exception {
         //given
-        ToDo toDo = ToDo.builder()
+        Todo toDo = Todo.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
                 .build();
         toDoRepository.save(toDo);
 
-        ToDoEdit toDoEdit = ToDoEdit.builder()
+        TodoEdit toDoEdit = TodoEdit.builder()
                 .title(null)
                 .content("내용")
                 .build();
 
         //expected
-        assertThrows(ToDoNotFound.class, () -> {
+        assertThrows(TodoNotFound.class, () -> {
             toDoService.edit(toDo.getId() + 1L, toDoEdit);
         });
 

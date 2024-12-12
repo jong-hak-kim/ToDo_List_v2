@@ -1,4 +1,4 @@
-package com.todo.request;
+package com.todo.request.todo;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import static java.lang.Math.min;
 @Builder
 @Getter
 @Setter
-public class ToDoSearch {
+public class TodoSearch {
 
     private static final int MAX_SIZE = 2000;
 

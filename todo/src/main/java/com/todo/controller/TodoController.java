@@ -1,11 +1,11 @@
 package com.todo.controller;
 
 import com.todo.config.UserPrincipal;
-import com.todo.request.ToDoCreate;
-import com.todo.request.ToDoEdit;
-import com.todo.request.ToDoSearch;
-import com.todo.response.ToDoResponse;
-import com.todo.service.ToDoService;
+import com.todo.request.todo.TodoCreate;
+import com.todo.request.todo.TodoEdit;
+import com.todo.request.todo.TodoSearch;
+import com.todo.response.TodoResponse;
+import com.todo.service.TodoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -70,14 +70,14 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class ToDoController {
+public class TodoController {
 
-    private final ToDoService toDoService;
+    private final TodoService toDoService;
 
     //    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/todos")
-    public void todos(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Valid ToDoCreate request) {
+    public void todos(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Valid TodoCreate request) {
         // 인증 방법
         //1. GET Parameter
         //2. POST(body) value (하지만 POST 바디 로 받게 되면
@@ -92,30 +92,30 @@ public class ToDoController {
      * /todos/{toDoId} -> 글 한 개 조회
      */
 
-    @GetMapping("/todos/{toDoId}")
-    public ToDoResponse get(@PathVariable Long toDoId) {
+    @GetMapping("/todos/{todoId}")
+    public TodoResponse get(@PathVariable Long todoId) {
         //응답 클래스 분리(서비스 정책에 맞는)
         //Request 클래스
         //Response 클래스 명확하게 분리
-        return toDoService.get(toDoId);
+        return toDoService.get(todoId);
     }
 
     @GetMapping("/todos")
-    public List<ToDoResponse> getList(@ModelAttribute ToDoSearch toDoSearch) {
+    public List<TodoResponse> getList(@ModelAttribute TodoSearch toDoSearch) {
         return toDoService.getList(toDoSearch);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PatchMapping("/todos/{toDoId}")
-    public void edit(@PathVariable Long toDoId, @RequestBody @Valid ToDoEdit request) {
-        toDoService.edit(toDoId, request);
+    @PatchMapping("/todos/{todoId}")
+    public void edit(@PathVariable Long todoId, @RequestBody @Valid TodoEdit request) {
+        toDoService.edit(todoId, request);
     }
 
     //    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PreAuthorize("hasRole('ROLE_ADMIN') && hasPermission(#toDoId, 'POST', 'DELETE')")
-    @DeleteMapping("/todos/{toDoId}")
-    public void delete(@PathVariable Long toDoId) {
-        toDoService.delete(toDoId);
+    @PreAuthorize("hasRole('ROLE_ADMIN') && hasPermission(#todoId, 'POST', 'DELETE')")
+    @DeleteMapping("/todos/{todoId}")
+    public void delete(@PathVariable Long todoId) {
+        toDoService.delete(todoId);
     }
 
 

@@ -2,12 +2,12 @@ package com.todo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.todo.config.ToDoMockUser;
-import com.todo.domain.ToDo;
+import com.todo.domain.Todo;
 import com.todo.domain.User;
-import com.todo.repository.ToDoRepository;
+import com.todo.repository.todo.TodoRepository;
 import com.todo.repository.UserRepository;
-import com.todo.request.ToDoCreate;
-import com.todo.request.ToDoEdit;
+import com.todo.request.todo.TodoCreate;
+import com.todo.request.todo.TodoEdit;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -58,7 +58,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class ToDoControllerTest {
+class TodoControllerTest {
 
     //Mock 테스트
     //웹 애플리케이션 API를 테스트할 때 사용
@@ -70,7 +70,7 @@ class ToDoControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private ToDoRepository toDoRepository;
+    private TodoRepository toDoRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -87,7 +87,7 @@ class ToDoControllerTest {
     void test2() throws Exception {
 
         //given
-        ToDoCreate request = ToDoCreate.builder()
+        TodoCreate request = TodoCreate.builder()
                 .content("내용입니다.")
                 .build();
 
@@ -113,7 +113,7 @@ class ToDoControllerTest {
     void test3() throws Exception {
 
         //given
-        ToDoCreate request = ToDoCreate.builder()
+        TodoCreate request = TodoCreate.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
                 .build();
@@ -140,7 +140,7 @@ class ToDoControllerTest {
     void test4() throws Exception {
 
         //given
-        ToDoCreate request = ToDoCreate.builder()
+        TodoCreate request = TodoCreate.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
                 .build();
@@ -159,7 +159,7 @@ class ToDoControllerTest {
         //then
         assertEquals(1L, toDoRepository.count());
 
-        ToDo toDo = toDoRepository.findAll().get(0);
+        Todo toDo = toDoRepository.findAll().get(0);
         assertEquals("제목입니다.", toDo.getTitle());
         assertEquals("내용입니다.", toDo.getContent());
 
@@ -177,7 +177,7 @@ class ToDoControllerTest {
 
         userRepository.save(user);
 
-        ToDo toDo = ToDo.builder()
+        Todo toDo = Todo.builder()
                 .title("123456789012345")
                 .content("bar")
                 .user(user)
@@ -212,14 +212,14 @@ class ToDoControllerTest {
 
         userRepository.save(user);
 
-        List<ToDo> requestToDos = IntStream.range(0, 20)
-                .mapToObj(i -> ToDo.builder()
+        List<Todo> requestTodos = IntStream.range(0, 20)
+                .mapToObj(i -> Todo.builder()
                         .title("제목 " + i)
                         .content("반포자이 " + i)
                         .user(user)
                         .build())
                 .collect(Collectors.toList());
-        toDoRepository.saveAll(requestToDos);
+        toDoRepository.saveAll(requestTodos);
 
         //클라이언트 요구사항
         // json 응답에서 title 값 길이를 최대 10글자로 해주세요.
@@ -251,14 +251,14 @@ class ToDoControllerTest {
 
         userRepository.save(user);
 
-        List<ToDo> requestToDos = IntStream.range(0, 20)
-                .mapToObj(i -> ToDo.builder()
+        List<Todo> requestTodos = IntStream.range(0, 20)
+                .mapToObj(i -> Todo.builder()
                         .title("제목 " + i)
                         .content("반포자이 " + i)
                         .user(user)
                         .build())
                 .collect(Collectors.toList());
-        toDoRepository.saveAll(requestToDos);
+        toDoRepository.saveAll(requestTodos);
 
         mockMvc.perform(get("/todos?page=0&size=10")
                         .contentType(APPLICATION_JSON))
@@ -278,14 +278,14 @@ class ToDoControllerTest {
         //given
         User user = userRepository.findAll().get(0);
 
-        ToDo toDo = ToDo.builder()
+        Todo toDo = Todo.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
                 .user(user)
                 .build();
         toDoRepository.save(toDo);
 
-        ToDoEdit toDoEdit = ToDoEdit.builder()
+        TodoEdit toDoEdit = TodoEdit.builder()
                 .title("제목")
                 .content("내용입니다.")
                 .build();
@@ -307,7 +307,7 @@ class ToDoControllerTest {
         //given
         User user = userRepository.findAll().get(0);
 
-        ToDo toDo = ToDo.builder()
+        Todo toDo = Todo.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
                 .user(user)
@@ -339,7 +339,7 @@ class ToDoControllerTest {
     @DisplayName("존재하지 않는 게시글 수정")
     void test11() throws Exception {
 
-        ToDoEdit toDoEdit = ToDoEdit.builder()
+        TodoEdit toDoEdit = TodoEdit.builder()
                 .title("제목")
                 .content("내용입니다.")
                 .build();

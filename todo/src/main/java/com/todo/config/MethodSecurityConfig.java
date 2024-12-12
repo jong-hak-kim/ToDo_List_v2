@@ -1,6 +1,6 @@
 package com.todo.config;
 
-import com.todo.repository.ToDoRepository;
+import com.todo.repository.todo.TodoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,12 +13,12 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 @RequiredArgsConstructor
 public class MethodSecurityConfig {
 
-    private final ToDoRepository toDoRepository;
+    private final TodoRepository toDoRepository;
 
     @Bean
     public MethodSecurityExpressionHandler methodSecurityExpressionHandler() {
         DefaultMethodSecurityExpressionHandler handler = new DefaultMethodSecurityExpressionHandler();
-        handler.setPermissionEvaluator(new ToDoPermissionEvaluator(toDoRepository));
+        handler.setPermissionEvaluator(new TodoPermissionEvaluator(toDoRepository));
         return handler;
     }
 

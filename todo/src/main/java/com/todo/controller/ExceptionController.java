@@ -1,5 +1,5 @@
 package com.todo.controller;
-import com.todo.exception.ToDoException;
+import com.todo.exception.TodoException;
 import com.todo.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -33,8 +33,8 @@ public class ExceptionController {
     }
 
     @ResponseBody
-    @ExceptionHandler(ToDoException.class)
-    public ResponseEntity<ErrorResponse> ToDoException(ToDoException e) {
+    @ExceptionHandler(TodoException.class)
+    public ResponseEntity<ErrorResponse> ToDoException(TodoException e) {
         int statusCode = e.getStatusCode();
 
         ErrorResponse body = ErrorResponse.builder()
