@@ -1,5 +1,8 @@
 // import './assets/main.css'
 //
+
+import 'reflect-metadata'
+
 import { createApp } from 'vue'
 
 import App from './App.vue'
