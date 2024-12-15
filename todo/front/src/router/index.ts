@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import LoginView from '../views/LoginView.vue'
 import WriteView from '../views/WriteView.vue'
 import ReadView from '../views/ReadView.vue'
 import EditView from '../views/EditView.vue'
@@ -10,26 +11,31 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: HomeView,
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: LoginView,
     },
     {
       path: '/write',
       name: 'write',
-      component: WriteView
+      component: WriteView,
     },
     {
       path: '/read/:todoId',
       name: 'read',
       component: ReadView,
-      props: true
+      props: true,
     },
     {
       path: '/edit/:todoId',
       name: 'edit',
       component: EditView,
-      props: true
-    }
-  ]
+      props: true,
+    },
+  ],
 })
 
 export default router
