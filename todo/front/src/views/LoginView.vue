@@ -6,6 +6,7 @@ import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
 import AxiosHttpClient from '@/http/AxiosHttpClient'
 import type HttpError from '@/http/HttpError'
+import UserRepository from '@/repository/UserRepository'
 
 const state = reactive({
   login: new Login(),
@@ -13,14 +14,10 @@ const state = reactive({
 
 const router = useRouter()
 
-function doLogin() {
-  const httpClient = new AxiosHttpClient()
+const USER_REPOSITORY = new UserRepository()
 
-  httpClient
-    .post({
-      path: '/api/auth/login',
-      body: state.login,
-    })
+function doLogin() {
+  USER_REPOSITORY.login(state.login)
     .then(() => {
       ElMessage({ type: 'success', message: '환영합니다 :)' })
       router.replace('/')
