@@ -17,12 +17,11 @@ function doLogin() {
   const httpClient = new AxiosHttpClient()
 
   httpClient
-    .request({
-      method: 'POST',
-      data: state.login,
-      url: '/api/auth/login',
+    .post({
+      path: '/api/auth/login',
+      body: state.login,
     })
-    .then((response: AxiosResponse) => {
+    .then(() => {
       ElMessage({ type: 'success', message: '환영합니다 :)' })
       router.replace('/')
     })

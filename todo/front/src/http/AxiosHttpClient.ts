@@ -1,6 +1,13 @@
-import type { AxiosInstance, AxiosRequestConfig } from 'axios'
+import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import axios from 'axios'
 import HttpError from '@/http/HttpError'
+
+export type HttpRequestConfig = {
+  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
+  path: string
+  params?: any
+  body?: any
+}
 
 export default class AxiosHttpClient {
   private readonly client: AxiosInstance = axios.create({
@@ -8,20 +15,35 @@ export default class AxiosHttpClient {
     timeoutErrorMessage: '힝..',
   })
 
-  public async request(config: AxiosRequestConfig) {
-    return this.client.request(config).catch((e) => {
-      return Promise.reject(new HttpError(e))
-    })
+  public async request(config: HttpRequestConfig) {
+    return this.client
+      .request({
+        method: config.method,
+        url: config.path,
+        params: config.params,
+        data: config.body,
+      })
+      .then((response: AxiosResponse) => {
+        return response.data
+      })
+      .catch((e) => {
+        return Promise.reject(new HttpError(e))
+      })
   }
 
-  public async get(url: string) {
-    return this.request({
-      method: 'GET',
-      url: url,
-    })
+  public async get(config: HttpRequestConfig) {
+    return this.request({ ...config, method: 'GET' })
   }
 
-  public async post(url: string) {}
+  public async post(config: HttpRequestConfig) {
+    return this.request({ ...config, method: 'POST' })
+  }
 
-  public async patch() {}
+  public async patch(config: HttpRequestConfig) {
+    return this.request({ ...config, method: 'PATCH' })
+  }
+
+  public async delete(config: HttpRequestConfig) {
+    return this.request({ ...config, method: 'DELETE' })
+  }
 }
