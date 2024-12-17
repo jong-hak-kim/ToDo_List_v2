@@ -56,15 +56,6 @@ public class SecurityConfig {
                         authorizeRequests
                                 .anyRequest().permitAll()
                 )
-//                .formLogin((formLogin) ->
-//                        formLogin
-//                                .loginPage("/auth/login")
-//                                .loginProcessingUrl("/auth/login")
-//                                .usernameParameter("username")
-//                                .passwordParameter("password")
-//                                .defaultSuccessUrl("/")
-//                                .failureHandler(new LoginFailHandler(objectMapper))
-//                )
                 .addFilterBefore(emailPasswordAuthFilter(), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(e -> {
                             e.accessDeniedHandler(new Http403Handler(objectMapper));

@@ -1,76 +1,37 @@
 <script setup lang="ts">
-import axios from 'axios'
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-
-const todos = ref([])
-
-const router = useRouter()
-
-axios.get('/api/todos?page=1&size=5').then(response => {
-  response.data.forEach((r: any) => {
-    todos.value.push(r)
-  })
-})
+import Todo from '@/components/Todo.vue'
 </script>
-
 <template>
-  <ul>
-    <li v-for="todo in todos" :key="todo.id">
-      <div class="title">
-        <router-link :to="{name: `read`, params: {todoId: todo.id}}">{{ todo.title }}</router-link>
-      </div>
-
-      <div class="content">
-        {{ todo.content }}
-      </div>
-
-      <div class="sub d-flex">
-        <div class="category">개발</div>
-        <div class="regDate">2024-11-18</div>
-      </div>
-    </li>
-  </ul>
+  <div class="content">
+    <ul class="todos">
+      <li>
+        <Todo />
+      </li>
+      <li>
+        <Todo />
+      </li>
+      <li>
+        <Todo />
+      </li>
+    </ul>
+  </div>
 </template>
 
 <style scoped lang="scss">
-ul {
+.content {
+  height: calc(100vh - 60px - 2rem - 20px - 1.5rem);
+  padding: 0 1rem 0 1rem;
+}
+
+.todos {
   list-style: none;
   padding: 0;
 
   li {
-    margin-bottom: 2rem;
-
-    .title {
-      a {
-        font-size: 1.1rem;
-        color: #383838;
-        text-decoration: none;
-      }
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-
-    .content {
-      font-size: 0.85rem;
-      margin-top: 8px;
-      color: #7e7e7e
-    }
+    margin-bottom: 2.4rem;
 
     &:last-child {
       margin-bottom: 0;
-    }
-
-    .sub {
-      margin-top: 8px;
-      font-size: 0.78rem;
-
-      .regDate {
-        margin-left: 10px;
-        color: #6b6b6b;
-      }
     }
   }
 }

@@ -1,47 +1,46 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-
-import axios from 'axios'
+import { reactive } from 'vue'
+import TodoWrite from '@/entity/todo/TodoWrite'
+import { container } from 'tsyringe'
+import TodoRepository from '@/repository/TodoRepository'
+import { ElMessage } from 'element-plus'
+import type HttpError from '@/http/HttpError'
 import { useRouter } from 'vue-router'
 
-const title = ref('')
-const content = ref('')
+const state = reactive({
+  todoWrite: new TodoWrite(),
+})
+
+const TODO_REPOSITORY = container.resolve(TodoRepository)
 
 const router = useRouter()
 
-const write = function() {
-  axios.post('/api/todos', {
-    title: title.value,
-    content: content.value
-  })
+function write() {
+  TODO_REPOSITORY.write(state.todoWrite)
     .then(() => {
-      router.replace
-      (
-        {
-          name: 'home'
-        }
-      )
+      ElMessage({ type: 'success', message: '글 등록이 완료되었습니다.' })
+      router.replace('/')
+    })
+    .catch((e: HttpError) => {
+      ElMessage({ type: 'error', message: e.getMessage() })
     })
 }
-
 </script>
 
 <template>
-  <div>
-    <el-input v-model="title" placeholder="제목을 입력해주세요" />
-  </div>
+  <el-form label-position="top">
+    <el-form-item label="제목">
+      <el-input v-model="state.todoWrite.title" size="large" placeholder="제목을 입력해주세요" />
+    </el-form-item>
 
-  <div class="mt-2">
-    <el-input v-model="content" type="textarea" rows="15" />
-  </div>
+    <el-form-item label="내용">
+      <el-input v-model="state.todoWrite.content" type="textarea" rows="15" alt="내용" />
+    </el-form-item>
 
-  <div class="mt-2">
-    <div class="d-flex justify-content-end">
-      <el-button type="primary" @click="write()">글 작성 완료</el-button>
-    </div>
-  </div>
+    <el-form-item>
+      <el-button type="primary" style="..." @click="write()">등록 완료</el-button>
+    </el-form-item>
+  </el-form>
 </template>
 
-<style>
-
-</style>
+<style></style>
