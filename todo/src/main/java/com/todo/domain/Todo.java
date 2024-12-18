@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,9 @@ public class Todo {
     @JoinColumn
     private User user;
 
+    @Column(nullable = false)
+    private LocalDateTime regDate;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "todo")
     private List<Comment> comments = new ArrayList<>();
 
@@ -35,6 +39,7 @@ public class Todo {
         this.title = title;
         this.content = content;
         this.user = user;
+        this.regDate = LocalDateTime.now();
     }
 
     public TodoEditor.TodoEditorBuilder toEditor() {

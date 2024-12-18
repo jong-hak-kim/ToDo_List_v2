@@ -5,8 +5,8 @@ import com.todo.domain.TodoEditor;
 import com.todo.domain.User;
 import com.todo.exception.TodoNotFound;
 import com.todo.exception.UserNotFound;
-import com.todo.repository.todo.TodoRepository;
 import com.todo.repository.UserRepository;
+import com.todo.repository.todo.TodoRepository;
 import com.todo.request.todo.TodoCreate;
 import com.todo.request.todo.TodoEdit;
 import com.todo.request.todo.TodoSearch;
@@ -46,11 +46,7 @@ public class TodoService {
         Todo todo = todoRepository.findById(id)
                 .orElseThrow(TodoNotFound::new);
 
-        return TodoResponse.builder()
-                .id(todo.getId())
-                .title(todo.getTitle())
-                .content(todo.getContent())
-                .build();
+        return new TodoResponse(todo);
     }
 
     // 글이 너무 많은 경우 -> 비용이 많이 든다.

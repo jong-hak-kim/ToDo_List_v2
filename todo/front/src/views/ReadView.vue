@@ -1,85 +1,108 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import axios from 'axios'
-import router from '@/router'
+import { onMounted, reactive } from 'vue'
+import { container } from 'tsyringe'
+import TodoRepository from '@/repository/TodoRepository'
 
-const props = defineProps({
-  todoId: {
-    type: [Number, String],
-    require: true
-  }
+const props = defineProps<{
+  todoId: number
+}>()
+
+const TODO_REPOSITORY = container.resolve(TodoRepository)
+
+const state = reactive({
+  todo: null,
 })
 
-const todo = ref({
-  id: 0,
-  title: '',
-  content: ''
-})
-
-const moveToEdit = () => {
-  router.push({ name: 'edit', params: { todoId: props.todoId } })
+function getPost() {
+  TODO_REPOSITORY.get(props.todoId)
+    .then((todo) => {
+      state.todo = todo
+    })
+    .catch((e) => {
+      console.error(e)
+    })
 }
 
 onMounted(() => {
-  axios.get(`/api/todos/${props.todoId}`).then(response => {
-    todo.value = response.data
-  })
+  getPost()
 })
-
 </script>
 
 <template>
+  <div v-if="state.todo != null">
+    <el-row>
+      <el-col :span="22" :offset="1">
+        <h2 class="title">{{ state.todo.title }}</h2>
+      </el-col>
+    </el-row>
 
-  <el-row>
-    <el-col>
-      <h2 class="title">{{ todo.title }}</h2>
+    <el-row>
+      <el-col span="10" :offset="7">
+        <div class="title">
+          <div class="regDate">Posted on {{ state.todo.regDate }}</div>
+        </div>
+      </el-col>
+    </el-row>
 
-      <div class="sub d-flex">
-        <div class="category">개발</div>
-        <div class="regDate">2024-11-18 23:59:59</div>
-      </div>
-    </el-col>
-  </el-row>
+    <el-row>
+      <el-col>
+        <div class="content">{{ state.todo.content }}</div>
+        <div class="footer">
+          <div class="edit">수정</div>
+          <div class="delete">삭제</div>
+        </div>
+      </el-col>
+    </el-row>
 
-  <el-row class="mt-3">
-    <el-col>
-      <div class="content">{{ todo.content }}</div>
-    </el-col>
-  </el-row>
-
-  <el-row class="mt-3">
-    <el-col>
-      <div class="d-flex justify-content-end">
-        <el-button type="warning" @click="moveToEdit()">수정</el-button>
-      </div>
-    </el-col>
-  </el-row>
+    <el-row class="comments">
+      <el-col>
+        <Comments />
+      </el-col>
+    </el-row>
+  </div>
 </template>
 
 <style scoped lang="scss">
 .title {
-  font-size: 1.6rem;
-  font-weight: 600;
-  color: #383838;
-  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 400;
+  text-align: center;
 }
 
-.sub {
-  margin-top: 10px;
+.regDate {
+  margin-top: 0.5rem;
   font-size: 0.78rem;
-
-  .regDate {
-    margin-left: 10px;
-    color: #6b6b6b;
-  }
+  font-weight: 300;
 }
 
 .content {
-  font-size: 0.95rem;
-  margin-top: 12px;
-  color: #616161;
+  margin-top: 1.88rem;
+  font-weight: 300;
+
+  word-break: break-all;
   white-space: break-spaces;
-  line-height: 1.5;
+  line-height: 1.4;
+  min-height: 5rem;
 }
 
+hr {
+  border-color: #f9f9f9;
+  margin: 1.2rem 0;
+}
+
+.footer {
+  margin-top: 1rem;
+  display: flex;
+  font-size: 0.78rem;
+  justify-content: flex-end;
+  gap: 0.8rem;
+
+  .delete {
+    color: red;
+  }
+}
+
+.comments {
+  margin-top: 4.8rem;
+}
 </style>

@@ -13,4 +13,10 @@ export default class TodoRepository {
       body: request,
     })
   }
+
+  public get(todoId: number) {
+    return this.httpRepository.get({
+      path: `/api/todos/${todoId}`,
+    })
+  }
 }

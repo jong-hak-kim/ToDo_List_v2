@@ -24,15 +24,9 @@ const router = createRouter({
       component: WriteView,
     },
     {
-      path: '/read/:todoId',
-      name: 'read',
+      path: '/todo/:todoId',
+      name: 'todo',
       component: ReadView,
-      props: true,
-    },
-    {
-      path: '/edit/:todoId',
-      name: 'edit',
-      component: EditView,
       props: true,
     },
   ],
