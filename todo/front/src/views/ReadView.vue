@@ -2,6 +2,8 @@
 import { onMounted, reactive } from 'vue'
 import { container } from 'tsyringe'
 import TodoRepository from '@/repository/TodoRepository'
+import Todo from '@/entity/todo/Todo'
+import { DateTimeFormatter } from '@js-joda/core'
 
 const props = defineProps<{
   todoId: number
@@ -9,13 +11,17 @@ const props = defineProps<{
 
 const TODO_REPOSITORY = container.resolve(TodoRepository)
 
-const state = reactive({
-  todo: null,
+type StateType = {
+  todo: Todo
+}
+
+const state = reactive<StateType>({
+  todo: new Todo(),
 })
 
 function getPost() {
   TODO_REPOSITORY.get(props.todoId)
-    .then((todo) => {
+    .then((todo: Todo) => {
       state.todo = todo
     })
     .catch((e) => {
@@ -39,7 +45,7 @@ onMounted(() => {
     <el-row>
       <el-col span="10" :offset="7">
         <div class="title">
-          <div class="regDate">Posted on {{ state.todo.regDate }}</div>
+          <div class="regDate">Posted on {{ state.todo.getDisplayRegDate() }}</div>
         </div>
       </el-col>
     </el-row>
