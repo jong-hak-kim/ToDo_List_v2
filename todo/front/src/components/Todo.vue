@@ -1,21 +1,24 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import type Todo from '@/entity/todo/Todo'
+
+const props = defineProps<{
+  todo: Todo
+}>()
+</script>
 
 <template>
   <div class="title">
-    <router-link :to="{ name: 'todo', params: { todoId: 1 } }">개발자의 서시</router-link>
+    <router-link :to="{ name: 'todo', params: { todoId: props.todo.id } }">{{ props.todo.title }}</router-link>
   </div>
 
-  <div class="regDate">Posted on 2024-12-17</div>
+  <div class="regDate">{{ props.todo.getDisplaySimpleRegDate() }}</div>
 
   <div class="content">
-    윤동주는 일제강점기 시인이자 독립운동가로서, 그의 작품은 민족적 슬픔과 자기 성찰을 담고 있습니다. *"서시"*는 그의
-    대표작입니다. 서시 죽는 날까지 하늘을 우러러 한 점 부끄럼이 없기를, 잎새에 이는 바람에도 나는 괴로워했다. 별을
-    노래하는 마음으로 모든 죽어가는 것을 사랑해야지 그리고 나한테 주어진 길을 걸어가야겠다. 오늘 밤에도 별이 바람에
-    스치운다.
+    {{ props.todo.content }}
   </div>
 
   <div class="readMore">
-    <router-link :to="{ name: 'todo', params: { todoId: 1 } }">Read more</router-link>
+    <router-link :to="{ name: 'todo', params: { todoId: props.todo.id } }">Read more</router-link>
   </div>
 </template>
 

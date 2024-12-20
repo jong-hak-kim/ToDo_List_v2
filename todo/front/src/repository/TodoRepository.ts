@@ -25,4 +25,14 @@ export default class TodoRepository {
         return plainToInstance(Todo, response)
       })
   }
+
+  public getList() {
+    return this.httpRepository
+      .get({
+        path: '/api/todos?page=1&size=3',
+      })
+      .then((response) => {
+        return plainToInstance(Todo, response)
+      })
+  }
 }
