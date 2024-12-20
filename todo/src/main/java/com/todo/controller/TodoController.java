@@ -4,6 +4,7 @@ import com.todo.config.UserPrincipal;
 import com.todo.request.todo.TodoCreate;
 import com.todo.request.todo.TodoEdit;
 import com.todo.request.todo.TodoSearch;
+import com.todo.response.PagingResponse;
 import com.todo.response.TodoResponse;
 import com.todo.service.TodoService;
 import jakarta.validation.Valid;
@@ -12,8 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 // Http Method
 // 각 기능 알기
@@ -101,7 +100,7 @@ public class TodoController {
     }
 
     @GetMapping("/todos")
-    public List<TodoResponse> getList(@ModelAttribute TodoSearch toDoSearch) {
+    public PagingResponse<TodoResponse> getList(@ModelAttribute TodoSearch toDoSearch) {
         return toDoService.getList(toDoSearch);
     }
 

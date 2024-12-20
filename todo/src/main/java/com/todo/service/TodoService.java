@@ -10,14 +10,13 @@ import com.todo.repository.todo.TodoRepository;
 import com.todo.request.todo.TodoCreate;
 import com.todo.request.todo.TodoEdit;
 import com.todo.request.todo.TodoSearch;
+import com.todo.response.PagingResponse;
 import com.todo.response.TodoResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -53,10 +52,10 @@ public class TodoService {
     // 글이 100,000,000인 경우 DB를 모두 조회하게 되면 DB가 뻗을 수 있다.
     // DB -> 애플리케이션 서버로 전달하는 시간, 트래픽 비용 등이 발생할 수 있다.
 
-    public List<TodoResponse> getList(TodoSearch todoSearch) {
-        return todoRepository.getList(todoSearch).stream()
-                .map(TodoResponse::new)
-                .collect(Collectors.toList());
+    public PagingResponse<TodoResponse> getList(TodoSearch todoSearch) {
+        Page<Todo> todoPage = todoRepository.getList(todoSearch);
+        PagingResponse<TodoResponse> todoList = new PagingResponse<>(todoPage, TodoResponse.class);
+        return todoList;
     }
 
     @Transactional
