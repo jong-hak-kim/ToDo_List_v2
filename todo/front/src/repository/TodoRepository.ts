@@ -17,26 +17,21 @@ export default class TodoRepository {
     })
   }
 
-  public get(todoId: number): Promise<Todo> {
-    return this.httpRepository
-      .get({
+  public get(todoId: number) {
+    return this.httpRepository.get<Todo>(
+      {
         path: `/api/todos/${todoId}`,
-      })
-      .then((response) => {
-        return plainToInstance(Todo, response)
-      })
+      },
+      Todo,
+    )
   }
 
   public getList(page: number) {
-    return this.httpRepository
-      .get({
+    return this.httpRepository.getList<Todo>(
+      {
         path: `/api/todos?page=${page}&size=3`,
-      })
-      .then((response) => {
-        const paging = plainToInstance<Paging<Todo>, any>(Paging, response)
-        const items = plainToClass<Todo, any[]>(Todo, response.items)
-        paging.setItems(items)
-        return paging
-      })
+      },
+      Todo,
+    )
   }
 }

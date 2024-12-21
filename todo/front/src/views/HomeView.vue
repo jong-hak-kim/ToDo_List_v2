@@ -17,6 +17,7 @@ const state = reactive<StateType>({
 
 function getList(page = 1) {
   TODO_REPOSITORY.getList(page).then((todoList) => {
+    console.log('>>>', todoList)
     state.todoList = todoList
   })
 }
