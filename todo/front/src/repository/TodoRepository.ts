@@ -4,6 +4,7 @@ import { inject, singleton } from 'tsyringe'
 import type TodoWrite from '@/entity/todo/TodoWrite'
 import { plainToClass, plainToInstance } from 'class-transformer'
 import Todo from '@/entity/todo/Todo'
+import Paging from '@/entity/data/Paging'
 
 @singleton()
 export default class TodoRepository {
@@ -26,13 +27,16 @@ export default class TodoRepository {
       })
   }
 
-  public getList() {
+  public getList(page: number) {
     return this.httpRepository
       .get({
-        path: '/api/todos?page=1&size=3',
+        path: `/api/todos?page=${page}&size=3`,
       })
       .then((response) => {
-        return plainToInstance(Todo, response)
+        const paging = plainToInstance<Paging<Todo>, any>(Paging, response)
+        const items = plainToClass<Todo, any[]>(Todo, response.items)
+        paging.setItems(items)
+        return paging
       })
   }
 }
