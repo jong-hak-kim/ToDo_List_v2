@@ -21,7 +21,7 @@ function doLogin() {
   USER_REPOSITORY.login(state.login)
     .then(() => {
       ElMessage({ type: 'success', message: '환영합니다 :)' })
-      router.replace('/')
+      location.href = '/'
     })
     .catch((e: HttpError) => {
       ElMessage({ type: 'error', message: e.getMessage() })
