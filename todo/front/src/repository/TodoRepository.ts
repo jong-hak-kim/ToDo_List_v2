@@ -34,4 +34,10 @@ export default class TodoRepository {
       Todo,
     )
   }
+
+  public delete(todoId: number) {
+    return this.httpRepository.delete({
+      path: `/api/todos/${todoId}`,
+    })
+  }
 }

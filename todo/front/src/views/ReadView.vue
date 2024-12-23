@@ -4,6 +4,8 @@ import { container } from 'tsyringe'
 import TodoRepository from '@/repository/TodoRepository'
 import Todo from '@/entity/todo/Todo'
 import { DateTimeFormatter } from '@js-joda/core'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { useRouter } from 'vue-router'
 
 const props = defineProps<{
   todoId: number
@@ -27,6 +29,22 @@ function getPost() {
     .catch((e) => {
       console.error(e)
     })
+}
+
+const router = useRouter()
+
+function remove() {
+  ElMessageBox.confirm('정말로 삭제하시겠습니까?', 'Warning', {
+    title: '삭제',
+    confirmButtonText: '삭제',
+    cancelButtonText: '취소',
+    type: 'warning',
+  }).then(() => {
+    TODO_REPOSITORY.delete(props.todoId).then(() => {
+      ElMessage({ type: 'success', message: '성공적으로 삭제되었습니다.' })
+      router.back()
+    })
+  })
 }
 
 onMounted(() => {
@@ -55,7 +73,7 @@ onMounted(() => {
         <div class="content">{{ state.todo.content }}</div>
         <div class="footer">
           <div class="edit">수정</div>
-          <div class="delete">삭제</div>
+          <div class="delete" @click="remove()">삭제</div>
         </div>
       </el-col>
     </el-row>
