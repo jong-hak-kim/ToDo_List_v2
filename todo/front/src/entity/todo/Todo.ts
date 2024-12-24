@@ -3,21 +3,17 @@ import { Transform } from 'class-transformer'
 
 export default class Todo {
   public id = 0
-
   public title = ''
-
   public content = ''
-
-  @Transform(({ value }) => LocalDateTime.parse(value, DateTimeFormatter.ISO_LOCAL_DATE_TIME))
-  public regDate = LocalDateTime.now()
-
-  // dayjs, monet, datefns
+  public regDate = ''
 
   public getDisplayRegDate() {
-    return this.regDate.format(DateTimeFormatter.ofPattern('yyyy년 MM월 dd일 HH시'))
+    const localDateTime = LocalDateTime.parse(this.regDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+    return localDateTime.format(DateTimeFormatter.ofPattern('yyyy년 MM월 dd일 HH시'))
   }
 
   public getDisplaySimpleRegDate() {
-    return this.regDate.format(DateTimeFormatter.ofPattern('yyyy-MM-dd'))
+    const localDateTime = LocalDateTime.parse(this.regDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+    return localDateTime.format(DateTimeFormatter.ofPattern('yyyy-MM-dd'))
   }
 }

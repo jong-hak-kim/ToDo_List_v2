@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import Todo from '@/components/Todo.vue'
+import type Todo from '@/entity/todo/Todo'
 import { onMounted, reactive } from 'vue'
 import TodoRepository from '@/repository/TodoRepository'
 import { container } from 'tsyringe'
 import Paging from '@/entity/data/Paging'
+import TodoComponent from '@/components/TodoComponent.vue'
 
 const TODO_REPOSITORY = container.resolve(TodoRepository)
 
@@ -31,7 +32,7 @@ onMounted(() => {
     <span class="totalCount">게시글 수: {{ state.todoList.totalCount }}</span>
     <ul class="todos">
       <li v-for="todo in state.todoList.items" :key="todo.id">
-        <Todo :todo="todo" />
+        <TodoComponent :todo="todo" />
       </li>
     </ul>
 
@@ -41,7 +42,7 @@ onMounted(() => {
       layout="prev, pager, next"
       :total="state.todoList.totalCount"
       :default-page-size="3"
-      @current-change="(page) => getList(page)"
+      @current-change="(page: number) => getList(page)"
     ></el-pagination>
   </div>
 </template>

@@ -75,7 +75,7 @@ public class TodoController {
 
     //    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("/todos")
+    @PostMapping("/api/todos")
     public void todos(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Valid TodoCreate request) {
         // 인증 방법
         //1. GET Parameter
@@ -91,7 +91,7 @@ public class TodoController {
      * /todos/{toDoId} -> 글 한 개 조회
      */
 
-    @GetMapping("/todos/{todoId}")
+    @GetMapping("/api/todos/{todoId}")
     public TodoResponse get(@PathVariable Long todoId) {
         //응답 클래스 분리(서비스 정책에 맞는)
         //Request 클래스
@@ -99,20 +99,20 @@ public class TodoController {
         return toDoService.get(todoId);
     }
 
-    @GetMapping("/todos")
+    @GetMapping("/api/todos")
     public PagingResponse<TodoResponse> getList(@ModelAttribute TodoSearch toDoSearch) {
         return toDoService.getList(toDoSearch);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PatchMapping("/todos/{todoId}")
+    @PatchMapping("/api/todos/{todoId}")
     public void edit(@PathVariable Long todoId, @RequestBody @Valid TodoEdit request) {
         toDoService.edit(todoId, request);
     }
 
     //    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PreAuthorize("hasRole('ROLE_ADMIN') && hasPermission(#todoId, 'POST', 'DELETE')")
-    @DeleteMapping("/todos/{todoId}")
+    @DeleteMapping("/api/todos/{todoId}")
     public void delete(@PathVariable Long todoId) {
         toDoService.delete(todoId);
     }

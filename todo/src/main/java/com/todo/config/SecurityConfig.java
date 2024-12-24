@@ -67,13 +67,17 @@ public class SecurityConfig {
                                 .alwaysRemember(false)
                                 .tokenValiditySeconds(2529000)
                 )
+                .logout(logout ->
+                        logout.logoutUrl("/api/logout")
+                                .logoutSuccessUrl("/")
+                )
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();
     }
 
     @Bean
     public EmailPasswordAuthFilter emailPasswordAuthFilter() {
-        EmailPasswordAuthFilter filter = new EmailPasswordAuthFilter("/auth/login", objectMapper);
+        EmailPasswordAuthFilter filter = new EmailPasswordAuthFilter("/api/auth/login", objectMapper);
         filter.setAuthenticationManager(authenticationManager());
         filter.setAuthenticationSuccessHandler(new LoginSuccessHandler(objectMapper));
         filter.setAuthenticationFailureHandler(new LoginFailHandler(objectMapper));

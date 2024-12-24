@@ -9,37 +9,43 @@ import Paging from '@/entity/data/Paging'
 export default class HttpRepository {
   constructor(@inject(AxiosHttpClient) private readonly httpClient: AxiosHttpClient) {}
 
-  public get<T>(config: HttpRequestConfig, clazz: { new (...args: any[]) }): Promise<T> {
+  public get<T>(config: HttpRequestConfig, clazz: { new (...args: any[]): T }): Promise<T> {
     return this.httpClient.request({ ...config, method: 'GET' }).then((response) => plainToInstance(clazz, response))
   }
 
-  public getList<T>(config: HttpRequestConfig, clazz: { new (...args: any[]) }): Promise<Paging<T>> {
+  public getList<T>(config: HttpRequestConfig, clazz: { new (...args: any[]): T }): Promise<Paging<T>> {
     return this.httpClient.request({ ...config, method: 'GET' }).then((response) => {
       const paging = plainToInstance<Paging<T>, any>(Paging, response)
       const items = plainToInstance<T, any>(clazz, response.items)
-      paging.setItems(items)
+      paging.setItems(Array.isArray(items) ? items : [items])
       return paging
     })
   }
 
-  public post<T>(config: HttpRequestConfig, clazz: { new (...args: any[]) } | null = null): Promise<T> {
-    return this.httpClient
-      .request({
-        ...config,
-        method: 'POST',
-      })
-      .then((response) => plainToInstance(clazz != null ? clazz : Null, response))
+  public async post<T>(config: HttpRequestConfig, clazz?: { new (...args: any[]): T }): Promise<T> {
+    const response = await this.httpClient.request({ ...config, method: 'POST' })
+    if (clazz) {
+      return plainToInstance(clazz, response.data)
+    } else {
+      return plainToInstance(Null, response.data) as unknown as T
+    }
   }
 
-  public patch<T>(config: HttpRequestConfig, clazz: { new (...args: any[]) } | null = null): Promise<T> {
-    return this.httpClient
-      .request({ ...config, method: 'PATCH' })
-      .then((response) => plainToInstance(clazz != null ? clazz : Null, response))
+  public async patch<T>(config: HttpRequestConfig, clazz?: { new (...args: any[]): T }): Promise<T> {
+    const response = await this.httpClient.request({ ...config, method: 'PATCH' })
+    if (clazz) {
+      return plainToInstance(clazz, response.data)
+    } else {
+      return plainToInstance(Null, response.data) as unknown as T
+    }
   }
 
-  public delete<T>(config: HttpRequestConfig, clazz: { new (...args: any[]) } | null = null): Promise<T> {
-    return this.httpClient
-      .request({ ...config, method: 'DELETE' })
-      .then((response) => plainToInstance(clazz != null ? clazz : Null, response))
+  public async delete<T>(config: HttpRequestConfig, clazz?: { new (...args: any[]): T }): Promise<T> {
+    const response = await this.httpClient.request({ ...config, method: 'DELETE' })
+    if (clazz) {
+      return plainToInstance(clazz, response.data)
+    } else {
+      return plainToInstance(Null, response.data) as unknown as T
+    }
   }
 }
